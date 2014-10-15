@@ -7,12 +7,15 @@
 //
 
 #import "PBSDetailViewController.h"
+#import "MBProgressHUD.h"
 
 @interface PBSDetailViewController ()
 
 @end
 
 @implementation PBSDetailViewController
+
+#pragma mark - Initializers
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -22,6 +25,8 @@
     }
     return self;
 }
+
+#pragma mark - View life cycle
 
 - (void)viewDidLoad
 {
@@ -34,29 +39,21 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-#pragma mark - Table view data source
+#pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
     // Return the number of sections.
     return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
     // Return the number of rows in the section.
     return 0;
 }
 
-/*
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
@@ -65,7 +62,7 @@
     
     return cell;
 }
-*/
+
 
 /*
 // Override to support conditional editing of the table view.
@@ -115,5 +112,13 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+#pragma mark - Memory Management
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
 
 @end

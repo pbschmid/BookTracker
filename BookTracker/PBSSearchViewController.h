@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PBSSearchViewController : UIViewController
+@interface PBSSearchViewController : UITableViewController
 
 @end
