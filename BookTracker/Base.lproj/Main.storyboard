@@ -8,8 +8,8 @@
         <scene sceneID="Vex-rW-GRa">
             <objects>
                 <tabBarController id="8YX-ce-x5E" sceneMemberID="viewController">
-                    <nil key="simulatedBottomBarMetrics"/>
-                    <tabBar key="tabBar" contentMode="scaleToFill" id="JQR-rB-NYL">
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" translucent="NO" id="JQR-rB-NYL">
                         <rect key="frame" x="0.0" y="431" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -23,22 +23,41 @@
             </objects>
             <point key="canvasLocation" x="132" y="180"/>
         </scene>
-        <!--Search View Controller - Root View Controller-->
+        <!--Search View Controller - BookTracker-->
         <scene sceneID="QuX-N2-N6V">
             <objects>
                 <tableViewController id="H6J-xh-pyd" customClass="PBSSearchViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="aIm-9v-bOA">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="interactive" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="aIm-9v-bOA">
+                        <rect key="frame" x="0.0" y="64" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.54117647059999996" green="0.35294117650000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="sectionIndexColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="sectionIndexBackgroundColor" red="0.54117647059999996" green="0.35294117650000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <searchBar key="tableHeaderView" contentMode="redraw" placeholder="Search by title, author or ISBN" translucent="NO" showsScopeBar="YES" id="Vxw-uE-Pnl">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="88"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="0.54117647058823526" green="0.3529411764705882" blue="0.2196078431372549" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="tintColor" red="0.25314891581632648" green="0.16448317652128139" blue="0.10506211991651106" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="barTintColor" red="0.54117647058823526" green="0.3529411764705882" blue="0.2196078431372549" alpha="1" colorSpace="calibratedRGB"/>
+                            <textInputTraits key="textInputTraits"/>
+                            <scopeButtonTitles>
+                                <string>All</string>
+                                <string>Title</string>
+                                <string>Author</string>
+                                <string>ISBN</string>
+                            </scopeButtonTitles>
+                        </searchBar>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="oaR-a9-4YY">
-                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="gray" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="BookCell" id="oaR-a9-4YY">
+                                <rect key="frame" x="0.0" y="110" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oaR-a9-4YY" id="VWf-7o-OJQ">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
+                                <color key="backgroundColor" red="0.54117647059999996" green="0.35294117650000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="tintColor" red="0.25314891579999999" green="0.16448317649999999" blue="0.1050621199" alpha="1" colorSpace="calibratedRGB"/>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -46,9 +65,9 @@
                             <outlet property="delegate" destination="H6J-xh-pyd" id="hjf-mP-SNw"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Root View Controller" id="tD2-cu-K9R"/>
+                    <navigationItem key="navigationItem" title="BookTracker" id="tD2-cu-K9R"/>
                     <connections>
-                        <segue destination="lvb-Zv-FVi" kind="push" id="zgR-6F-i4e"/>
+                        <segue destination="lvb-Zv-FVi" kind="push" identifier="BookDetail" id="zgR-6F-i4e"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RdU-c1-ZqA" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -59,20 +78,40 @@
         <scene sceneID="Eyo-qn-sk8">
             <objects>
                 <tableViewController id="ncR-Ue-fKL" customClass="PBSDetailViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="FoS-kd-5lS">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="FoS-kd-5lS">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="519"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="mba-Zl-UUa">
-                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="mba-Zl-UUa" id="hyh-SC-e8j">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
+                        <sections>
+                            <tableViewSection id="bO8-ee-sN2">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="mba-Zl-UUa">
+                                        <rect key="frame" x="0.0" y="64" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="mba-Zl-UUa" id="hyh-SC-e8j">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="IDb-AC-VOx">
+                                        <rect key="frame" x="0.0" y="108" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="IDb-AC-VOx" id="xS8-ad-JDN">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="8i0-Ew-BK7">
+                                        <rect key="frame" x="0.0" y="152" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8i0-Ew-BK7" id="cVy-Pn-lW8">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
                         <connections>
                             <outlet property="dataSource" destination="ncR-Ue-fKL" id="DnQ-e4-9uU"/>
                             <outlet property="delegate" destination="ncR-Ue-fKL" id="cQC-7O-frb"/>
@@ -84,12 +123,14 @@
             </objects>
             <point key="canvasLocation" x="2412" y="44"/>
         </scene>
-        <!--Navigation Controller - BookSearch-->
+        <!--Navigation Controller - Search-->
         <scene sceneID="fB3-EB-3Ul">
             <objects>
                 <navigationController definesPresentationContext="YES" id="kAh-Td-QN0" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="BookSearch" id="a7o-gg-VUj"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="j0Y-Ey-mtI">
+                    <tabBarItem key="tabBarItem" title="Search" id="a7o-gg-VUj"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="j0Y-Ey-mtI">
+                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -100,22 +141,27 @@
             </objects>
             <point key="canvasLocation" x="731" y="-326"/>
         </scene>
-        <!--List View Controller - Root View Controller-->
+        <!--List View Controller - MyBooks-->
         <scene sceneID="Az6-HA-cEs">
             <objects>
                 <tableViewController id="dx8-9e-LWS" customClass="PBSListViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="p9b-Qn-hNB">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="interactive" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="p9b-Qn-hNB">
+                        <rect key="frame" x="0.0" y="64" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.54117647059999996" green="0.35294117650000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="sectionIndexColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="sectionIndexBackgroundColor" red="0.54117647059999996" green="0.35294117650000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Etp-SV-HNr">
-                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="checkmark" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MyBookCell" id="Etp-SV-HNr">
+                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Etp-SV-HNr" id="t0B-9u-dhs">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="281" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
+                                <color key="backgroundColor" red="0.54117647059999996" green="0.35294117650000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="tintColor" red="0.25314891579999999" green="0.16448317649999999" blue="0.1050621199" alpha="1" colorSpace="calibratedRGB"/>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -123,9 +169,9 @@
                             <outlet property="delegate" destination="dx8-9e-LWS" id="OzO-Hh-Ugh"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Root View Controller" id="8XV-Yq-RQx"/>
+                    <navigationItem key="navigationItem" title="MyBooks" id="8XV-Yq-RQx"/>
                     <connections>
-                        <segue destination="lvb-Zv-FVi" kind="push" id="a85-k7-nBn"/>
+                        <segue destination="lvb-Zv-FVi" kind="push" identifier="MyBookDetail" id="a85-k7-nBn"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3F5-Er-iZE" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -137,7 +183,9 @@
             <objects>
                 <navigationController definesPresentationContext="YES" id="SZb-bz-Kog" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="MyBooks" id="XVW-kf-sci"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Qkb-ml-hUO">
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="Qkb-ml-hUO">
+                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -174,6 +222,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="a85-k7-nBn"/>
+        <segue reference="zgR-6F-i4e"/>
     </inferredMetricsTieBreakers>
 </document>

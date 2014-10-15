@@ -27,11 +27,14 @@
 {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    titleLabel.backgroundColor = [UIColor clearColor];
+    titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    titleLabel.textColor = [UIColor colorWithRed:65/255.0f green:42/255.0f blue:27/255.0f alpha:1.0f];
+    titleLabel.text = @"MyBooks";
+    [titleLabel sizeToFit];
+    self.navigationItem.titleView = titleLabel;
 }
 
 #pragma mark - UITableViewDataSource
@@ -39,24 +42,22 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return 0;
+    return 1;
 }
 
-
- - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
- {
- UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
- 
- // Configure the cell...
- 
- return cell;
- }
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MyBookCell"
+                                                            forIndexPath:indexPath];
+    cell.textLabel.text = @"Book Nr. 1";
+    return cell;
+}
 
 /*
  // Override to support conditional editing of the table view.
