@@ -7,9 +7,13 @@
 //
 
 #import "PBSSearchViewController.h"
+#import "PBSBookStore.h"
+#import "PBSBookCell.h"
 #import "MBProgressHUD.h"
 
-@interface PBSSearchViewController () <UINavigationControllerDelegate>
+@interface PBSSearchViewController () <UINavigationControllerDelegate, UISearchBarDelegate>
+
+@property (nonatomic, weak) IBOutlet UISearchBar *searchBar;
 
 @end
 
@@ -32,11 +36,15 @@
 {
     [super viewDidLoad];
     
+    self.tableView.rowHeight = 88.0f;
+    self.tableView.separatorColor = [UIColor colorWithRed:45/255.0f green:29/255.0f
+                                                     blue:19/255.0f alpha:0.5f];
+    
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
     titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.textColor = [UIColor colorWithRed:65/255.0f green:42/255.0f blue:27/255.0f alpha:1.0f];
+    titleLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:1.0f];
     titleLabel.text = @"BookTracker";
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
@@ -54,52 +62,43 @@
     return 1;
 }
 
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
  {
-     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"BookCell"
-                                                             forIndexPath:indexPath];
-     cell.textLabel.text = @"Book Nr. 1";
+     PBSBookCell *cell = (PBSBookCell *)[tableView dequeueReusableCellWithIdentifier:@"BookCell"];
+     
+     cell.titleLabel.text = @"The Catcher in the Rye";
+     cell.authorLabel.text = @"J.D. Salinger";
+     
      return cell;
  }
 
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
+           editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewCellEditingStyleNone;
+}
 
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
- } else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }
- }
- */
+#pragma mark - UITableViewDelegate
 
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
 
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
+#pragma mark - UISearchBarDelegate
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    [searchBar resignFirstResponder];
+    [self searchForBook];
+}
+
+- (void)searchForBook
+{
+    PBSBookStore *bookStore = [[PBSBookStore alloc] init];
+    NSLog(@"Initializing BookStore...");
+    [bookStore fetchResultsForText:self.searchBar.text category:self.searchBar.selectedScopeButtonIndex];
+}
 
 /*
  #pragma mark - Navigation

@@ -10,4 +10,6 @@
 
 @interface PBSBookStore : NSObject
 
+- (void)fetchResultsForText:(NSString *)text category:(NSInteger)category;
+
 @end

@@ -7,12 +7,15 @@
 //
 
 #import "PBSListViewController.h"
+#import "PBSBookCell.h"
 
 @interface PBSListViewController ()
 
 @end
 
 @implementation PBSListViewController
+
+#pragma mark - Initializers
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -23,15 +26,21 @@
     return self;
 }
 
+#pragma mark - View life cycle
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.tableView.rowHeight = 88.0f;
+    self.tableView.separatorColor = [UIColor colorWithRed:45/255.0f green:29/255.0f
+                                                     blue:19/255.0f alpha:0.5f];
     
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
     titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.textColor = [UIColor colorWithRed:65/255.0f green:42/255.0f blue:27/255.0f alpha:1.0f];
+    titleLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:1.0f];
     titleLabel.text = @"MyBooks";
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
@@ -53,10 +62,25 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MyBookCell"
-                                                            forIndexPath:indexPath];
-    cell.textLabel.text = @"Book Nr. 1";
+    PBSBookCell *cell = (PBSBookCell *)[tableView dequeueReusableCellWithIdentifier:@"MyBookCell"];
+    
+    cell.titleLabel.text = @"The Catcher in the Rye";
+    cell.authorLabel.text = @"J.D. Salinger";
+    
     return cell;
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
+           editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewCellEditingStyleNone;
+}
+
+#pragma mark - UITableViewDelegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 /*

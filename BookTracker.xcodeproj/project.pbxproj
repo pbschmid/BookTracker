@@ -23,6 +23,7 @@
 		373C68E119EE61C6005C3AEB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 373C68DF19EE61C6005C3AEB /* InfoPlist.strings */; };
 		373C68E319EE61C6005C3AEB /* BookTrackerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 373C68E219EE61C6005C3AEB /* BookTrackerTests.m */; };
 		373C68F319EE695D005C3AEB /* PBSDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 373C68F219EE695D005C3AEB /* PBSDetailViewController.m */; };
+		374EF96F19EEC75400CFD18E /* PBSBookCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 374EF96E19EEC75400CFD18E /* PBSBookCell.m */; };
 		379694FB19EE703F0069B446 /* PBSBook.m in Sources */ = {isa = PBXBuildFile; fileRef = 379694FA19EE703F0069B446 /* PBSBook.m */; };
 		379694FF19EE70650069B446 /* PBSBookStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 379694FE19EE70650069B446 /* PBSBookStore.m */; };
 		3796950219EE72AE0069B446 /* BookModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3796950019EE72AE0069B446 /* BookModel.xcdatamodeld */; };
@@ -64,6 +65,8 @@
 		373C68E219EE61C6005C3AEB /* BookTrackerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BookTrackerTests.m; sourceTree = "<group>"; };
 		373C68F119EE695D005C3AEB /* PBSDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSDetailViewController.h; sourceTree = "<group>"; };
 		373C68F219EE695D005C3AEB /* PBSDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSDetailViewController.m; sourceTree = "<group>"; };
+		374EF96D19EEC75400CFD18E /* PBSBookCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSBookCell.h; sourceTree = "<group>"; };
+		374EF96E19EEC75400CFD18E /* PBSBookCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSBookCell.m; sourceTree = "<group>"; };
 		379694F919EE703F0069B446 /* PBSBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSBook.h; sourceTree = "<group>"; };
 		379694FA19EE703F0069B446 /* PBSBook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSBook.m; sourceTree = "<group>"; };
 		379694FD19EE70650069B446 /* PBSBookStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSBookStore.h; sourceTree = "<group>"; };
@@ -194,6 +197,8 @@
 			isa = PBXGroup;
 			children = (
 				373C68C619EE61C6005C3AEB /* Main.storyboard */,
+				374EF96D19EEC75400CFD18E /* PBSBookCell.h */,
+				374EF96E19EEC75400CFD18E /* PBSBookCell.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -386,6 +391,7 @@
 				373C68F319EE695D005C3AEB /* PBSDetailViewController.m in Sources */,
 				373C68CB19EE61C6005C3AEB /* PBSSearchViewController.m in Sources */,
 				379694FB19EE703F0069B446 /* PBSBook.m in Sources */,
+				374EF96F19EEC75400CFD18E /* PBSBookCell.m in Sources */,
 				373C68C119EE61C6005C3AEB /* main.m in Sources */,
 				379694FF19EE70650069B446 /* PBSBookStore.m in Sources */,
 			);
