@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PBSSecondViewController : UIViewController
+@interface PBSListViewController : UIViewController
 
 @end

@@ -1,18 +1,18 @@
 //
-//  PBSFirstViewController.m
+//  PBSSecondViewController.m
 //  BookTracker
 //
 //  Created by Philippe Schmid on 15.10.14.
 //  Copyright (c) 2014 Philippe Schmid. All rights reserved.
 //
 
-#import "PBSFirstViewController.h"
+#import "PBSListViewController.h"
 
-@interface PBSFirstViewController ()
+@interface PBSListViewController ()
 
 @end
 
-@implementation PBSFirstViewController
+@implementation PBSListViewController
 
 - (void)viewDidLoad
 {
