@@ -40,30 +40,31 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
 
 - (NSString *)createURLFromText:(NSString *)text category:(NSInteger)category
 {
-    NSString *categoryName;
+    NSString *searchText;
     switch (category) {
         case 0:
-            categoryName = @"";
+            searchText = text;
             break;
         case 1:
-            categoryName = @"intitle:";
+            searchText = [NSString stringWithFormat:@"intitle:%@", text];
             break;
         case 2:
-            categoryName = @"inauthor:";
+            searchText = [NSString stringWithFormat:@"inauthor:%@", text];
             break;
         case 3:
-            categoryName = @"isbn:";
+            searchText = [NSString stringWithFormat:@"isbn:%@", text];
             break;
     }
     
     NSLocale *locale = [NSLocale autoupdatingCurrentLocale];
+    NSString *language = [locale localeIdentifier];
     NSString *countryCode = [locale objectForKey:NSLocaleCountryCode];
     
-    NSString *escapedText = [text stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *escapedText = [searchText stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     NSString *urlString = [NSString stringWithFormat:
-                           @"https://www.googleapis.com/books/v1/volumes?q=%@&country=%@",
-                           escapedText, countryCode];
+                @"https://www.googleapis.com/books/v1/volumes?q=%@&maxResults=40&lang=%@&country=%@",
+                escapedText, language, countryCode];
     
     return urlString;
 }
@@ -84,6 +85,7 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
                                                                id responseObject) {
             
             NSLog(@"Success!");
+            NSLog(@"%@", responseObject[@"items"]);
             [self parseResponseObject:responseObject];
             block(YES, nil);
             
@@ -124,7 +126,7 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
         book.language = bookDetails[@"language"];
         book.pages = bookDetails[@"pageCount"];
         
-        book.categories = bookDetails[@"categories"];
+        book.categories = bookDetails[@"categories"][0];
         book.type = bookDetails[@"printType"];
         //book.ISBN = bookDetails[@"industryIdentifiers"][@"identifier"];
         book.imageLink = bookDetails[@"imageLinks"][@"thumbnail"];

@@ -13,6 +13,8 @@
 #import "MBProgressHUD.h"
 #import <AFNetworking/UIImageView+AFNetworking.h>
 
+static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
+
 @interface PBSSearchViewController () <UINavigationControllerDelegate, UISearchBarDelegate>
 
 @property (nonatomic, weak) IBOutlet UISearchBar *searchBar;
@@ -48,6 +50,9 @@
     self.tableView.separatorColor = [UIColor colorWithRed:45/255.0f green:29/255.0f
                                                      blue:19/255.0f alpha:0.5f];
     
+    UINib *cellNib = [UINib nibWithNibName:NothingFoundCellIdentifier bundle:nil];
+    [self.tableView registerNib:cellNib forCellReuseIdentifier:NothingFoundCellIdentifier];
+    
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
@@ -70,22 +75,35 @@
     if ([self.bookStore.bookResults count] > 0) {
         return [self.bookStore.bookResults count];
     } else {
-        return 0;
+        return 1;
     }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
  {
-     PBSBookCell *cell = (PBSBookCell *)[tableView dequeueReusableCellWithIdentifier:@"BookCell"];
-     PBSBook *bookResult = self.bookStore.bookResults[indexPath.row];
+     if ([self.bookStore.bookResults count] > 0) {
+         
+         PBSBookCell *cell = (PBSBookCell *)[tableView dequeueReusableCellWithIdentifier:@"BookCell"];
+         PBSBook *bookResult = self.bookStore.bookResults[indexPath.row];
      
-     cell.titleLabel.text = [NSString stringWithFormat:@"%@", bookResult.title];
-     cell.authorLabel.text = [NSString stringWithFormat:@"%@", bookResult.authors];
-     [cell.coverImageView setImageWithURL:[NSURL URLWithString:bookResult.imageLink] placeholderImage:nil];
-     cell.coverImageView.layer.cornerRadius = 10.0f;
-     cell.coverImageView.clipsToBounds = YES;
+         cell.titleLabel.text = [NSString stringWithFormat:@"%@", bookResult.title];
+         cell.authorLabel.text = [NSString stringWithFormat:@"%@", bookResult.authors];
+         [cell.coverImageView setImageWithURL:[NSURL URLWithString:bookResult.imageLink]];
+         cell.coverImageView.layer.cornerRadius = 10.0f;
+         cell.coverImageView.clipsToBounds = YES;
      
-     return cell;
+         return cell;
+         
+     } else {
+         
+         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NothingFoundCellIdentifier
+                                                                 forIndexPath:indexPath];
+         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+         cell.userInteractionEnabled = NO;
+         
+         return cell;
+         
+     }
  }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
@@ -107,6 +125,13 @@
 {
     [searchBar resignFirstResponder];
     [self searchForBook];
+}
+
+- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope
+{
+    if (self.bookStore) {
+        [self searchForBook];
+    }
 }
 
 - (void)searchForBook
