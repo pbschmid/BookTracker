@@ -8,8 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+typedef void (^CompletionBlock)(BOOL finished, NSError *error);
+
 @interface PBSBookStore : NSObject
 
-- (void)fetchResultsForText:(NSString *)text category:(NSInteger)category;
+@property (nonatomic, readonly, strong) NSMutableArray *bookResults;
+
+- (void)fetchResultsForText:(NSString *)text category:(NSInteger)category completion:(CompletionBlock)block;
 
 @end

@@ -7,11 +7,36 @@
 //
 
 #import "PBSBookStore.h"
+#import "PBSBook.h"
 #import <AFNetworking/AFNetworking.h>
 
-static NSString * const APIKEY = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A";
+static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A";
+
+@interface PBSBookStore ()
+
+@property (nonatomic, readwrite, strong) NSMutableArray *bookResults;
+
+@end
 
 @implementation PBSBookStore
+
+#pragma mark - Initializers
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        NSLog(@"Initializing BookStore...");
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    NSLog(@"Deallocating BookStore...");
+}
+
+#pragma mark - AFNetworking
 
 - (NSString *)createURLFromText:(NSString *)text category:(NSInteger)category
 {
@@ -21,66 +46,95 @@ static NSString * const APIKEY = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A";
             categoryName = @"";
             break;
         case 1:
-            categoryName = @"";
+            categoryName = @"intitle:";
             break;
         case 2:
-            categoryName = @"";
+            categoryName = @"inauthor:";
             break;
         case 3:
-            categoryName = @"";
+            categoryName = @"isbn:";
             break;
     }
     
-    //NSLocale *locale = [NSLocale autoupdatingCurrentLocale];
-    //NSString *countryCode = [locale objectForKey:NSLocaleCountryCode];
+    NSLocale *locale = [NSLocale autoupdatingCurrentLocale];
+    NSString *countryCode = [locale objectForKey:NSLocaleCountryCode];
+    
+    NSString *escapedText = [text stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     NSString *urlString = [NSString stringWithFormat:
-                           @"https://www.googleapis.com/books/v1/volumes?q=%@&country=CH&key=AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A",
-                           text];
+                           @"https://www.googleapis.com/books/v1/volumes?q=%@&country=%@",
+                           escapedText, countryCode];
+    
     return urlString;
 }
 
-- (void)fetchResultsForText:(NSString *)text category:(NSInteger)category
+- (void)fetchResultsForText:(NSString *)text category:(NSInteger)category completion:(CompletionBlock)block
 {
-    NSString *urlString = [self createURLFromText:text category:category];
+    if ([text length] > 0) {
+        
+        NSString *urlString = [self createURLFromText:text category:category];
+        NSDictionary *params = @{@"format" : @"json"};
     
-    NSLog(@"%@", urlString);
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        manager.responseSerializer = [AFJSONResponseSerializer serializer];
+        manager.requestSerializer = [AFJSONRequestSerializer serializer];
+        [manager.requestSerializer setValue:@"userId" forHTTPHeaderField:GoogleAPIKey];
+        
+        [manager GET:urlString parameters:params success:^(AFHTTPRequestOperation *operation,
+                                                               id responseObject) {
+            
+            NSLog(@"Success!");
+            [self parseResponseObject:responseObject];
+            block(YES, nil);
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            NSLog(@"%@", [error userInfo]);
+            block(NO, error);
+            
+        }];
+    }
+}
+
+#pragma mark - JSON parsing
+
+- (void)parseResponseObject:(NSDictionary *)responseObject
+{
+    NSArray *results = responseObject[@"items"];
     
-    //NSURL *url = [NSURL URLWithString:urlString];
-    //NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    if (!results) {
+        NSLog(@"Results empty.");
+        return;
+    }
     
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    [manager GET:urlString parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"Success!");
-        NSLog(@"%@", responseObject);
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@ %@", error, [error userInfo]);
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                            message:[error localizedDescription]
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil, nil];
-        [alertView show];
-    }];
+    self.bookResults = [[NSMutableArray alloc] init];
     
-    /*
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    operation.responseSerializer = [AFJSONResponseSerializer serializer];
-    
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"Success!");
-        NSLog(@"%@", responseObject);
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@ %@", error, [error userInfo]);
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                            message:[error localizedDescription]
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil, nil];
-        [alertView show];
-    }];
-    
-    [[NSOperationQueue mainQueue] addOperation:operation];*/
+    for (NSDictionary *bookResult in results) {
+        
+        NSDictionary *bookDetails = bookResult[@"volumeInfo"];
+        
+        PBSBook *book = [[PBSBook alloc] init];
+        book.title = bookDetails[@"title"];
+        book.authors = bookDetails[@"authors"][0];
+        
+        book.subtitle = bookDetails[@"subtitle"];
+        book.publisher = bookDetails[@"publisher"];
+        book.publishedDate = bookDetails[@"publishedDate"];
+        book.description = bookDetails[@"description"];
+        book.language = bookDetails[@"language"];
+        book.pages = bookDetails[@"pageCount"];
+        
+        book.categories = bookDetails[@"categories"];
+        book.type = bookDetails[@"printType"];
+        //book.ISBN = bookDetails[@"industryIdentifiers"][@"identifier"];
+        book.imageLink = bookDetails[@"imageLinks"][@"thumbnail"];
+        //book.previewLink = bookDetails[@"previewLink"];
+        
+        book.rating = bookDetails[@"averageRating"];
+        book.numberOfRatings = bookDetails[@"ratingsCount"];
+        
+        [self.bookResults addObject:book];
+    }
 }
 
 @end

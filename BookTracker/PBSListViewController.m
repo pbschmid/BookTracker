@@ -1,5 +1,5 @@
 //
-//  PBSSecondViewController.m
+//  PBSListViewController.m
 //  BookTracker
 //
 //  Created by Philippe Schmid on 15.10.14.

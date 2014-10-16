@@ -1,5 +1,5 @@
 //
-//  PBSFirstViewController.h
+//  PBSSearchViewController.h
 //  BookTracker
 //
 //  Created by Philippe Schmid on 15.10.14.

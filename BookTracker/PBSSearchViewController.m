@@ -1,5 +1,5 @@
 //
-//  PBSFirstViewController.m
+//  PBSSearchViewController.m
 //  BookTracker
 //
 //  Created by Philippe Schmid on 15.10.14.
@@ -8,12 +8,15 @@
 
 #import "PBSSearchViewController.h"
 #import "PBSBookStore.h"
+#import "PBSBook.h"
 #import "PBSBookCell.h"
 #import "MBProgressHUD.h"
+#import <AFNetworking/UIImageView+AFNetworking.h>
 
 @interface PBSSearchViewController () <UINavigationControllerDelegate, UISearchBarDelegate>
 
 @property (nonatomic, weak) IBOutlet UISearchBar *searchBar;
+@property (nonatomic, strong) PBSBookStore *bookStore;
 
 @end
 
@@ -28,6 +31,11 @@
         self.navigationController.delegate = self;
     }
     return self;
+}
+
+- (void)dealloc
+{
+    NSLog(@"Deallocating SearchViewController...");
 }
 
 #pragma mark - View life cycle
@@ -59,15 +67,21 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;
+    if ([self.bookStore.bookResults count] > 0) {
+        return [self.bookStore.bookResults count];
+    } else {
+        return 0;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
  {
      PBSBookCell *cell = (PBSBookCell *)[tableView dequeueReusableCellWithIdentifier:@"BookCell"];
+     PBSBook *bookResult = self.bookStore.bookResults[indexPath.row];
      
-     cell.titleLabel.text = @"The Catcher in the Rye";
-     cell.authorLabel.text = @"J.D. Salinger";
+     cell.titleLabel.text = [NSString stringWithFormat:@"%@", bookResult.title];
+     cell.authorLabel.text = [NSString stringWithFormat:@"%@", bookResult.authors];
+     [cell.coverImageView setImageWithURL:[NSURL URLWithString:bookResult.imageLink] placeholderImage:nil];
      
      return cell;
  }
@@ -95,21 +109,40 @@
 
 - (void)searchForBook
 {
-    PBSBookStore *bookStore = [[PBSBookStore alloc] init];
-    NSLog(@"Initializing BookStore...");
-    [bookStore fetchResultsForText:self.searchBar.text category:self.searchBar.selectedScopeButtonIndex];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeIndeterminate;
+    hud.labelText = @"Loading...";
+    [hud show:YES];
+    
+    self.bookStore = [[PBSBookStore alloc] init];
+    [self.bookStore fetchResultsForText:self.searchBar.text
+                               category:self.searchBar.selectedScopeButtonIndex
+                             completion:^(BOOL finished, NSError *error) {
+                                 if (finished) {
+                                     [hud hide:YES];
+                                     [self booksRetrieved];
+                                 } else {
+                                     [hud hide:YES];
+                                     [self showNetworkError:error];
+                                 }
+                             }];
 }
 
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
- {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
+- (void)booksRetrieved
+{
+    NSLog(@"All Books Retrieved.");
+    [self.tableView reloadData];
+}
+
+- (void)showNetworkError:(NSError *)error
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                        message:[error localizedDescription]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil, nil];
+    [alertView show];
+}
 
 #pragma mark - Memory Management
 
