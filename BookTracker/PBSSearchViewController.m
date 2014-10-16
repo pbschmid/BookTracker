@@ -82,6 +82,8 @@
      cell.titleLabel.text = [NSString stringWithFormat:@"%@", bookResult.title];
      cell.authorLabel.text = [NSString stringWithFormat:@"%@", bookResult.authors];
      [cell.coverImageView setImageWithURL:[NSURL URLWithString:bookResult.imageLink] placeholderImage:nil];
+     cell.coverImageView.layer.cornerRadius = 10.0f;
+     cell.coverImageView.clipsToBounds = YES;
      
      return cell;
  }
