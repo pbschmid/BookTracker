@@ -46,13 +46,6 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 {
     [super viewDidLoad];
     
-    self.tableView.rowHeight = 88.0f;
-    self.tableView.separatorColor = [UIColor colorWithRed:45/255.0f green:29/255.0f
-                                                     blue:19/255.0f alpha:0.5f];
-    
-    UINib *cellNib = [UINib nibWithNibName:NothingFoundCellIdentifier bundle:nil];
-    [self.tableView registerNib:cellNib forCellReuseIdentifier:NothingFoundCellIdentifier];
-    
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
@@ -60,7 +53,15 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
     titleLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:1.0f];
     titleLabel.text = @"BookTracker";
     [titleLabel sizeToFit];
+    
     self.navigationItem.titleView = titleLabel;
+    
+    self.tableView.rowHeight = 88.0f;
+    self.tableView.separatorColor = [UIColor colorWithRed:45/255.0f green:29/255.0f
+                                                     blue:19/255.0f alpha:0.5f];
+    
+    UINib *cellNib = [UINib nibWithNibName:NothingFoundCellIdentifier bundle:nil];
+    [self.tableView registerNib:cellNib forCellReuseIdentifier:NothingFoundCellIdentifier];
 }
 
 #pragma mark - UITableViewDataSource
@@ -121,6 +122,18 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 
 #pragma mark - UISearchBarDelegate
 
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+{
+    [searchBar resignFirstResponder];
+    [searchBar setShowsCancelButton:NO animated:YES];
+    self.searchBar.text = @"";
+}
+
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
+{
+    [searchBar setShowsCancelButton:YES animated:YES];
+}
+
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
     [searchBar resignFirstResponder];
@@ -176,7 +189,6 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end
