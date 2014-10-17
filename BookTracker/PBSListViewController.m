@@ -53,7 +53,18 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
     
     UINib *cellNib = [UINib nibWithNibName:NothingFoundCellIdentifier bundle:nil];
     [self.tableView registerNib:cellNib forCellReuseIdentifier:NothingFoundCellIdentifier];
-    
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self fetchObjectContext];
+}
+
+#pragma mark - Core Data
+
+- (void)fetchObjectContext
+{
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"PBSBook"
                                               inManagedObjectContext:self.managedObjectContext];
@@ -69,8 +80,6 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
     }
     
     self.savedBooks = (NSMutableArray *)fetchedObjects;
-    
-    [self.tableView reloadData];
 }
 
 #pragma mark - UITableViewDataSource
