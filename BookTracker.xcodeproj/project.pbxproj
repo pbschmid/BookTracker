@@ -25,7 +25,7 @@
 		373C68F319EE695D005C3AEB /* PBSDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 373C68F219EE695D005C3AEB /* PBSDetailViewController.m */; };
 		374EF96F19EEC75400CFD18E /* PBSBookCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 374EF96E19EEC75400CFD18E /* PBSBookCell.m */; };
 		377B5F3219F012FD004F5523 /* PBSNothingFoundCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 377B5F3019F012FD004F5523 /* PBSNothingFoundCell.xib */; };
-		379694FB19EE703F0069B446 /* PBSBook.m in Sources */ = {isa = PBXBuildFile; fileRef = 379694FA19EE703F0069B446 /* PBSBook.m */; };
+		377E3C5019F15B4F00E07534 /* PBSBook.m in Sources */ = {isa = PBXBuildFile; fileRef = 377E3C4F19F15B4F00E07534 /* PBSBook.m */; };
 		379694FF19EE70650069B446 /* PBSBookStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 379694FE19EE70650069B446 /* PBSBookStore.m */; };
 		3796950219EE72AE0069B446 /* BookModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3796950019EE72AE0069B446 /* BookModel.xcdatamodeld */; };
 		ACF4048282966191E612E910 /* libPods-BookTracker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A797F3905580CC5E2A6A591E /* libPods-BookTracker.a */; };
@@ -69,8 +69,8 @@
 		374EF96D19EEC75400CFD18E /* PBSBookCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSBookCell.h; sourceTree = "<group>"; };
 		374EF96E19EEC75400CFD18E /* PBSBookCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSBookCell.m; sourceTree = "<group>"; };
 		377B5F3119F012FD004F5523 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PBSNothingFoundCell.xib; sourceTree = "<group>"; };
-		379694F919EE703F0069B446 /* PBSBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSBook.h; sourceTree = "<group>"; };
-		379694FA19EE703F0069B446 /* PBSBook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSBook.m; sourceTree = "<group>"; };
+		377E3C4E19F15B4F00E07534 /* PBSBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSBook.h; sourceTree = "<group>"; };
+		377E3C4F19F15B4F00E07534 /* PBSBook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSBook.m; sourceTree = "<group>"; };
 		379694FD19EE70650069B446 /* PBSBookStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSBookStore.h; sourceTree = "<group>"; };
 		379694FE19EE70650069B446 /* PBSBookStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSBookStore.m; sourceTree = "<group>"; };
 		3796950119EE72AE0069B446 /* BookModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BookModel.xcdatamodel; sourceTree = "<group>"; };
@@ -247,8 +247,8 @@
 			isa = PBXGroup;
 			children = (
 				3796950019EE72AE0069B446 /* BookModel.xcdatamodeld */,
-				379694F919EE703F0069B446 /* PBSBook.h */,
-				379694FA19EE703F0069B446 /* PBSBook.m */,
+				377E3C4E19F15B4F00E07534 /* PBSBook.h */,
+				377E3C4F19F15B4F00E07534 /* PBSBook.m */,
 				379694FD19EE70650069B446 /* PBSBookStore.h */,
 				379694FE19EE70650069B446 /* PBSBookStore.m */,
 			);
@@ -390,11 +390,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				373C68CE19EE61C6005C3AEB /* PBSListViewController.m in Sources */,
+				377E3C5019F15B4F00E07534 /* PBSBook.m in Sources */,
 				373C68C519EE61C6005C3AEB /* PBSAppDelegate.m in Sources */,
 				3796950219EE72AE0069B446 /* BookModel.xcdatamodeld in Sources */,
 				373C68F319EE695D005C3AEB /* PBSDetailViewController.m in Sources */,
 				373C68CB19EE61C6005C3AEB /* PBSSearchViewController.m in Sources */,
-				379694FB19EE703F0069B446 /* PBSBook.m in Sources */,
 				374EF96F19EEC75400CFD18E /* PBSBookCell.m in Sources */,
 				373C68C119EE61C6005C3AEB /* main.m in Sources */,
 				379694FF19EE70650069B446 /* PBSBookStore.m in Sources */,

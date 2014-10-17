@@ -78,15 +78,16 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
         book.author = [object valueForKey:@"author"];
         book.publisher = [object valueForKey:@"publisher"];
         book.bookDescription = [object valueForKey:@"bookDescription"];
-        book.publishedDate = [object valueForKey:@"date"];
+        book.date = [object valueForKey:@"date"];
         book.imageLink = [object valueForKey:@"imageLink"];
         book.previewLink = [object valueForKey:@"previewLink"];
         book.pages = [object valueForKey:@"pages"];
         book.language = [object valueForKey:@"language"];
-        book.ISBN = [object valueForKey:@"isbn"];
+        book.isbn = [object valueForKey:@"isbn"];
         
         [self.savedBooks addObject:book];
     }
+    [self.tableView reloadData];
 }
 
 #pragma mark - UITableViewDataSource
@@ -144,8 +145,8 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    //PBSBook *book = self.bookStore.bookResults[indexPath.row];
-    [self performSegueWithIdentifier:@"MyBookDetail" sender:self];
+    PBSBook *book = self.savedBooks[indexPath.row];
+    [self performSegueWithIdentifier:@"MyBookDetail" sender:book];
 }
 
 #pragma mark - Navigation
@@ -158,7 +159,7 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
                                                                             action:nil];
     
     PBSDetailViewController *detailVC = (PBSDetailViewController *)segue.destinationViewController;
-    //detailVC.bookResult = (PBSBook *)sender;
+    detailVC.bookResult = (PBSBook *)sender;
     detailVC.managedObjectContext = self.managedObjectContext;
 }
 

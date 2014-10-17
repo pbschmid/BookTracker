@@ -118,21 +118,21 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
         book.title = bookDetails[@"title"];
         book.author = bookDetails[@"authors"][0];
         
-        book.subtitle = bookDetails[@"subtitle"];
+        //book.subtitle = bookDetails[@"subtitle"];
         book.publisher = bookDetails[@"publisher"];
-        book.publishedDate = bookDetails[@"publishedDate"];
+        book.date = bookDetails[@"publishedDate"];
         book.bookDescription = bookDetails[@"description"];
         book.language = bookDetails[@"language"];
         book.pages = bookDetails[@"pageCount"];
         
-        book.categories = bookDetails[@"categories"][0];
-        book.type = bookDetails[@"printType"];
+        //book.categories = bookDetails[@"categories"][0];
+        //book.type = bookDetails[@"printType"];
         //book.ISBN = bookDetails[@"industryIdentifiers"][@"identifier"];
         book.imageLink = bookDetails[@"imageLinks"][@"thumbnail"];
         //book.previewLink = bookDetails[@"previewLink"];
         
-        book.rating = bookDetails[@"averageRating"];
-        book.numberOfRatings = bookDetails[@"ratingsCount"];
+        //book.rating = bookDetails[@"averageRating"];
+        //book.numberOfRatings = bookDetails[@"ratingsCount"];
         
         [self.bookResults addObject:book];
     }

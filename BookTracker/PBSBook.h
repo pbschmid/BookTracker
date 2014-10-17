@@ -2,29 +2,25 @@
 //  PBSBook.h
 //  BookTracker
 //
-//  Created by Philippe Schmid on 15.10.14.
+//  Created by Philippe Schmid on 17.10.14.
 //  Copyright (c) 2014 Philippe Schmid. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 
-@interface PBSBook : NSObject
 
-@property (nonatomic, copy) NSString *title;
-@property (nonatomic, copy) NSString *author;
-@property (nonatomic, copy) NSString *publisher;
-@property (nonatomic, copy) NSString *bookDescription;
-@property (nonatomic, copy) NSString *language;
-@property (nonatomic, strong) NSNumber *pages;
-@property (nonatomic, strong) NSNumber *ISBN;
-@property (nonatomic, copy) NSString *imageLink;
-@property (nonatomic, copy) NSString *previewLink;
-@property (nonatomic, strong) NSString *publishedDate;
+@interface PBSBook : NSManagedObject
 
-@property (nonatomic, copy) NSString *subtitle;
-@property (nonatomic, copy) NSString *categories;
-@property (nonatomic, copy) NSString *type;
-@property (nonatomic, strong) NSNumber *rating;
-@property (nonatomic, strong) NSNumber *numberOfRatings;
+@property (nonatomic, retain) NSString * title;
+@property (nonatomic, retain) NSString * date;
+@property (nonatomic, retain) NSString * publisher;
+@property (nonatomic, retain) NSString * bookDescription;
+@property (nonatomic, retain) NSString * language;
+@property (nonatomic, retain) NSNumber * pages;
+@property (nonatomic, retain) NSNumber * isbn;
+@property (nonatomic, retain) NSString * imageLink;
+@property (nonatomic, retain) NSString * previewLink;
+@property (nonatomic, retain) NSString * author;
 
 @end
