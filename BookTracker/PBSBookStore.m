@@ -85,7 +85,7 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
                                                                id responseObject) {
             
             NSLog(@"Success!");
-            NSLog(@"%@", responseObject[@"items"]);
+            //NSLog(@"%@", responseObject[@"items"]);
             [self parseResponseObject:responseObject];
             block(YES, nil);
             

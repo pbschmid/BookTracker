@@ -7,6 +7,7 @@
 //
 
 #import "PBSSearchViewController.h"
+#import "PBSDetailViewController.h"
 #import "PBSBookStore.h"
 #import "PBSBook.h"
 #import "PBSBookCell.h"
@@ -118,6 +119,22 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    PBSBook *book = self.bookStore.bookResults[indexPath.row];
+    [self performSegueWithIdentifier:@"BookDetail" sender:book];
+}
+
+#pragma mark - Navigation
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                                                             style:UIBarButtonItemStylePlain
+                                                                            target:nil
+                                                                            action:nil];
+    
+    PBSDetailViewController *detailVC = (PBSDetailViewController *)segue.destinationViewController;
+    detailVC.bookResult = (PBSBook *)sender;
 }
 
 #pragma mark - UISearchBarDelegate
