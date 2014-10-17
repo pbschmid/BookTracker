@@ -52,6 +52,10 @@
     
     self.navigationItem.titleView = titleLabel;
     
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Save"
+                                                                              style:UIBarButtonItemStylePlain
+                                                                             target:self
+                                                                             action:@selector(save)];
     [self configureTableViewCells];
 }
 
@@ -86,11 +90,38 @@
     self.dateLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:0.8f];
     
     self.titleLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.title];
-    self.authorLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.authors];
+    self.authorLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.author];
     self.pagesLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.pages];
     self.dateLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.publishedDate];
     self.publisherLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.publisher];
-    self.descriptionTextView.text = [NSString stringWithFormat:@"%@", self.bookResult.description];
+    self.descriptionTextView.text = [NSString stringWithFormat:@"%@", self.bookResult.bookDescription];
+}
+
+#pragma mark - Core Data
+
+- (void)save
+{
+    NSLog(@"Saving: %@", self.bookResult.title);
+    
+    NSManagedObject *book = [NSEntityDescription insertNewObjectForEntityForName:@"Book"
+                                                          inManagedObjectContext:self.managedObjectContext];
+    [book setValue:self.bookResult.title forKey:@"title"];
+    [book setValue:self.bookResult.author forKey:@"author"];
+    [book setValue:self.bookResult.publisher forKey:@"publisher"];
+    [book setValue:self.bookResult.bookDescription forKey:@"bookDescription"];
+    [book setValue:self.bookResult.publishedDate forKey:@"date"];
+    [book setValue:self.bookResult.imageLink forKey:@"imageLink"];
+    [book setValue:self.bookResult.previewLink forKey:@"previewLink"];
+    [book setValue:self.bookResult.pages forKey:@"pages"];
+    [book setValue:self.bookResult.language forKey:@"language"];
+    [book setValue:self.bookResult.ISBN forKey:@"isbn"];
+    
+    NSError *error;
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"Error Saving Objects: %@", [error localizedDescription]);
+    }
+    
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - Memory Management

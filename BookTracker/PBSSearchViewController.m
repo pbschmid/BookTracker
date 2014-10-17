@@ -89,7 +89,7 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
          PBSBook *bookResult = self.bookStore.bookResults[indexPath.row];
      
          cell.titleLabel.text = [NSString stringWithFormat:@"%@", bookResult.title];
-         cell.authorLabel.text = [NSString stringWithFormat:@"%@", bookResult.authors];
+         cell.authorLabel.text = [NSString stringWithFormat:@"%@", bookResult.author];
          [cell.coverImageView setImageWithURL:[NSURL URLWithString:bookResult.imageLink]];
          cell.coverImageView.layer.cornerRadius = 10.0f;
          cell.coverImageView.clipsToBounds = YES;
@@ -135,6 +135,7 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
     
     PBSDetailViewController *detailVC = (PBSDetailViewController *)segue.destinationViewController;
     detailVC.bookResult = (PBSBook *)sender;
+    detailVC.managedObjectContext = self.managedObjectContext;
 }
 
 #pragma mark - UISearchBarDelegate

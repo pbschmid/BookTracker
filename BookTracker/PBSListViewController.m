@@ -6,10 +6,17 @@
 //  Copyright (c) 2014 Philippe Schmid. All rights reserved.
 //
 
+#import <AFNetworking/UIImageView+AFNetworking.h>
 #import "PBSListViewController.h"
+#import "PBSDetailViewController.h"
 #import "PBSBookCell.h"
+#import "PBSBook.h"
+
+static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 
 @interface PBSListViewController ()
+
+@property (nonatomic, strong) NSMutableArray *savedBooks;
 
 @end
 
@@ -43,30 +50,86 @@
     titleLabel.text = @"MyBooks";
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
+    
+    UINib *cellNib = [UINib nibWithNibName:NothingFoundCellIdentifier bundle:nil];
+    [self.tableView registerNib:cellNib forCellReuseIdentifier:NothingFoundCellIdentifier];
+    
+    // loading core data objects
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Book"
+                                              inManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:entity];
+    
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:YES];
+    [fetchRequest setSortDescriptors:@[sortDescriptor]];
+    
+    NSError *error;
+    NSArray *fetchedObjects = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (fetchedObjects == nil) {
+        NSLog(@"Error Loading Objects: %@", [error localizedDescription]);
+    }
+    
+    self.savedBooks = [[NSMutableArray alloc] init];
+    
+    for (NSManagedObject *object in fetchedObjects) {
+        PBSBook *book = [[PBSBook alloc] init];
+        
+        book.title = [object valueForKey:@"title"];
+        book.author = [object valueForKey:@"author"];
+        book.publisher = [object valueForKey:@"publisher"];
+        book.bookDescription = [object valueForKey:@"bookDescription"];
+        book.publishedDate = [object valueForKey:@"date"];
+        book.imageLink = [object valueForKey:@"imageLink"];
+        book.previewLink = [object valueForKey:@"previewLink"];
+        book.pages = [object valueForKey:@"pages"];
+        book.language = [object valueForKey:@"language"];
+        book.ISBN = [object valueForKey:@"isbn"];
+        
+        [self.savedBooks addObject:book];
+    }
 }
 
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    // Return the number of sections.
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    // Return the number of rows in the section.
-    return 1;
+    if ([self.savedBooks count] > 0) {
+        return [self.savedBooks count];
+    } else {
+        return 1;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    PBSBookCell *cell = (PBSBookCell *)[tableView dequeueReusableCellWithIdentifier:@"MyBookCell"];
-    
-    cell.titleLabel.text = @"The Catcher in the Rye";
-    cell.authorLabel.text = @"J.D. Salinger";
-    
-    return cell;
+    if ([self.savedBooks count] > 0) {
+        
+        PBSBookCell *cell = (PBSBookCell *)[tableView dequeueReusableCellWithIdentifier:@"MyBookCell"];
+        PBSBook *book = self.savedBooks[indexPath.row];
+        
+        cell.titleLabel.text = [NSString stringWithFormat:@"%@", book.title];
+        cell.authorLabel.text = [NSString stringWithFormat:@"%@", book.author];
+        [cell.coverImageView setImageWithURL:[NSURL URLWithString:book.imageLink]];
+        cell.coverImageView.layer.cornerRadius = 10.0f;
+        cell.coverImageView.clipsToBounds = YES;
+        
+        return cell;
+        
+    } else {
+        
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NothingFoundCellIdentifier
+                                                                forIndexPath:indexPath];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.userInteractionEnabled = NO;
+        
+        return cell;
+        
+    }
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
@@ -80,6 +143,23 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    //PBSBook *book = self.bookStore.bookResults[indexPath.row];
+    [self performSegueWithIdentifier:@"MyBookDetail" sender:self];
+}
+
+#pragma mark - Navigation
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                                                             style:UIBarButtonItemStylePlain
+                                                                            target:nil
+                                                                            action:nil];
+    
+    PBSDetailViewController *detailVC = (PBSDetailViewController *)segue.destinationViewController;
+    //detailVC.bookResult = (PBSBook *)sender;
+    detailVC.managedObjectContext = self.managedObjectContext;
 }
 
 /*

@@ -7,11 +7,31 @@
 //
 
 #import "PBSAppDelegate.h"
+#import "PBSSearchViewController.h"
+#import "PBSListViewController.h"
+
+@interface PBSAppDelegate ()
+
+@property (nonatomic, strong) NSManagedObjectModel *managedObjectModel;
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+
+@end
 
 @implementation PBSAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    UITabBarController *tabBarController = (UITabBarController *)self.window.rootViewController;
+    UINavigationController *nvc1 = tabBarController.viewControllers[0];
+    UINavigationController *nvc2 = tabBarController.viewControllers[1];
+    
+    PBSSearchViewController *searchVC = (PBSSearchViewController *)nvc1.topViewController;
+    PBSListViewController *listVC = (PBSListViewController *)nvc2.topViewController;
+    
+    searchVC.managedObjectContext = self.managedObjectContext;
+    listVC.managedObjectContext = self.managedObjectContext;
+    
     [self customizeAppearance];
     return YES;
 }
@@ -56,6 +76,61 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+#pragma mark - Core Data
+
+- (NSString *)documentsDirectory
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths lastObject];
+    return documentsDirectory;
+}
+
+- (NSString *)dataStorePath
+{
+    return [[self documentsDirectory] stringByAppendingPathComponent:@"DataStore.sqlite"];
+}
+
+- (NSManagedObjectModel *)managedObjectModel
+{
+    if (_managedObjectModel == nil) {
+        NSString *modelPath = [[NSBundle mainBundle] pathForResource:@"BookModel" ofType:@"momd"];
+        NSURL *modelURL = [NSURL fileURLWithPath:modelPath];
+        _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    }
+    return _managedObjectModel;
+}
+
+- (NSPersistentStoreCoordinator *)persistentStoreCoordinator
+{
+    if (_persistentStoreCoordinator == nil) {
+        NSURL *storeURL = [NSURL fileURLWithPath:[self dataStorePath]];
+        _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc]
+                                       initWithManagedObjectModel:self.managedObjectModel];
+        NSError *error;
+        if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
+                                                       configuration:nil
+                                                                 URL:storeURL
+                                                             options:nil
+                                                               error:&error]) {
+            NSLog(@"Error creating SQLiteStore: %@ %@", error, [error userInfo]);
+        }
+    }
+    return _persistentStoreCoordinator;
+}
+
+- (NSManagedObjectContext *)managedObjectContext
+{
+    if (_managedObjectContext == nil) {
+        NSPersistentStoreCoordinator *coordinator = self.persistentStoreCoordinator;
+        
+        if (coordinator != nil) {
+            _managedObjectContext = [[NSManagedObjectContext alloc] init];
+            [_managedObjectContext setPersistentStoreCoordinator:coordinator];
+        }
+    }
+    return _managedObjectContext;
 }
 
 @end

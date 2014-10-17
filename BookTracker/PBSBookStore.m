@@ -8,7 +8,6 @@
 
 #import "PBSBookStore.h"
 #import "PBSBook.h"
-#import <AFNetworking/AFNetworking.h>
 
 static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A";
 
@@ -117,12 +116,12 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
         
         PBSBook *book = [[PBSBook alloc] init];
         book.title = bookDetails[@"title"];
-        book.authors = bookDetails[@"authors"][0];
+        book.author = bookDetails[@"authors"][0];
         
         book.subtitle = bookDetails[@"subtitle"];
         book.publisher = bookDetails[@"publisher"];
         book.publishedDate = bookDetails[@"publishedDate"];
-        book.description = bookDetails[@"description"];
+        book.bookDescription = bookDetails[@"description"];
         book.language = bookDetails[@"language"];
         book.pages = bookDetails[@"pageCount"];
         
