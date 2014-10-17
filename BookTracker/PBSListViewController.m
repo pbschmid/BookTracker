@@ -54,13 +54,12 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
     UINib *cellNib = [UINib nibWithNibName:NothingFoundCellIdentifier bundle:nil];
     [self.tableView registerNib:cellNib forCellReuseIdentifier:NothingFoundCellIdentifier];
     
-    // loading core data objects
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Book"
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PBSBook"
                                               inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];
     
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:YES];
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:NO];
     [fetchRequest setSortDescriptors:@[sortDescriptor]];
     
     NSError *error;
@@ -69,24 +68,8 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
         NSLog(@"Error Loading Objects: %@", [error localizedDescription]);
     }
     
-    self.savedBooks = [[NSMutableArray alloc] init];
+    self.savedBooks = (NSMutableArray *)fetchedObjects;
     
-    for (NSManagedObject *object in fetchedObjects) {
-        PBSBook *book = [[PBSBook alloc] init];
-        
-        book.title = [object valueForKey:@"title"];
-        book.author = [object valueForKey:@"author"];
-        book.publisher = [object valueForKey:@"publisher"];
-        book.bookDescription = [object valueForKey:@"bookDescription"];
-        book.date = [object valueForKey:@"date"];
-        book.imageLink = [object valueForKey:@"imageLink"];
-        book.previewLink = [object valueForKey:@"previewLink"];
-        book.pages = [object valueForKey:@"pages"];
-        book.language = [object valueForKey:@"language"];
-        book.isbn = [object valueForKey:@"isbn"];
-        
-        [self.savedBooks addObject:book];
-    }
     [self.tableView reloadData];
 }
 
@@ -159,58 +142,10 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
                                                                             action:nil];
     
     PBSDetailViewController *detailVC = (PBSDetailViewController *)segue.destinationViewController;
-    detailVC.bookResult = (PBSBook *)sender;
+    detailVC.book = (PBSBook *)sender;
+    detailVC.savedBook = YES;
     detailVC.managedObjectContext = self.managedObjectContext;
 }
-
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
- } else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
- {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
 
 #pragma mark - Memory Management
 

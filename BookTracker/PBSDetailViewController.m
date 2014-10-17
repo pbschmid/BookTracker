@@ -7,7 +7,10 @@
 //
 
 #import "PBSDetailViewController.h"
+#import "PBSSearchViewController.h"
+#import "PBSListViewController.h"
 #import "MBProgressHUD.h"
+#import "PBSBookResult.h"
 #import "PBSBook.h"
 #import <AFNetworking/UIImageView+AFNetworking.h>
 
@@ -52,11 +55,7 @@
     
     self.navigationItem.titleView = titleLabel;
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Save"
-                                                                              style:UIBarButtonItemStylePlain
-                                                                             target:self
-                                                                             action:@selector(save)];
-    [self configureTableViewCells];
+    [self configureViewForBookResult];
 }
 
 #pragma mark - UITableViewDataSource
@@ -73,9 +72,8 @@
 
 #pragma mark - Customization
 
-- (void)configureTableViewCells
+- (void)configureViewForBookResult
 {
-    [self.coverImageView setImageWithURL:[NSURL URLWithString:self.bookResult.imageLink]];
     self.coverImageView.layer.cornerRadius = 10.0f;
     self.coverImageView.clipsToBounds = YES;
     
@@ -89,12 +87,32 @@
     self.pagesLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:0.8f];
     self.dateLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:0.8f];
     
-    self.titleLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.title];
-    self.authorLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.author];
-    self.pagesLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.pages];
-    self.dateLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.date];
-    self.publisherLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.publisher];
-    self.descriptionTextView.text = [NSString stringWithFormat:@"%@", self.bookResult.bookDescription];
+    if (!self.savedBook) {
+        
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Save"
+                                                                                  style:UIBarButtonItemStylePlain
+                                                                                 target:self
+                                                                                 action:@selector(save)];
+        
+        [self.coverImageView setImageWithURL:[NSURL URLWithString:self.bookResult.imageLink]];
+        self.titleLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.title];
+        self.authorLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.author];
+        self.pagesLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.pages];
+        self.dateLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.date];
+        self.publisherLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.publisher];
+        self.descriptionTextView.text = [NSString stringWithFormat:@"%@", self.bookResult.bookDescription];
+        
+    } else if (self.savedBook) {
+        
+        [self.coverImageView setImageWithURL:[NSURL URLWithString:self.book.imageLink]];
+        self.titleLabel.text = [NSString stringWithFormat:@"%@", self.book.title];
+        self.authorLabel.text = [NSString stringWithFormat:@"%@", self.book.author];
+        self.pagesLabel.text = [NSString stringWithFormat:@"%@", self.book.pages];
+        self.dateLabel.text = [NSString stringWithFormat:@"%@", self.book.date];
+        self.publisherLabel.text = [NSString stringWithFormat:@"%@", self.book.publisher];
+        self.descriptionTextView.text = [NSString stringWithFormat:@"%@", self.book.bookDescription];
+        
+    }
 }
 
 #pragma mark - Core Data
@@ -103,18 +121,18 @@
 {
     NSLog(@"Saving: %@", self.bookResult.title);
     
-    NSManagedObject *book = [NSEntityDescription insertNewObjectForEntityForName:@"Book"
+    PBSBook *book = [NSEntityDescription insertNewObjectForEntityForName:@"PBSBook"
                                                           inManagedObjectContext:self.managedObjectContext];
-    [book setValue:self.bookResult.title forKey:@"title"];
-    [book setValue:self.bookResult.author forKey:@"author"];
-    [book setValue:self.bookResult.publisher forKey:@"publisher"];
-    [book setValue:self.bookResult.bookDescription forKey:@"bookDescription"];
-    [book setValue:self.bookResult.date forKey:@"date"];
-    [book setValue:self.bookResult.imageLink forKey:@"imageLink"];
-    [book setValue:self.bookResult.previewLink forKey:@"previewLink"];
-    [book setValue:self.bookResult.pages forKey:@"pages"];
-    [book setValue:self.bookResult.language forKey:@"language"];
-    [book setValue:self.bookResult.isbn forKey:@"isbn"];
+    book.title = self.bookResult.title;
+    book.author = self.bookResult.author;
+    book.publisher = self.bookResult.publisher;
+    book.bookDescription = self.bookResult.bookDescription;
+    book.date = self.bookResult.date;
+    book.imageLink = self.bookResult.imageLink;
+    book.previewLink = self.bookResult.previewLink;
+    book.pages = self.bookResult.pages;
+    book.language = self.bookResult.language;
+    book.isbn = self.bookResult.ISBN;
     
     NSError *error;
     if (![self.managedObjectContext save:&error]) {

@@ -7,7 +7,7 @@
 //
 
 #import "PBSBookStore.h"
-#import "PBSBook.h"
+#import "PBSBookResult.h"
 
 static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A";
 
@@ -114,27 +114,28 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
         
         NSDictionary *bookDetails = bookResult[@"volumeInfo"];
         
-        PBSBook *book = [[PBSBook alloc] init];
-        book.title = bookDetails[@"title"];
-        book.author = bookDetails[@"authors"][0];
+        PBSBookResult *bookResult = [[PBSBookResult alloc] init];
+        bookResult.title = bookDetails[@"title"];
+        bookResult.author = bookDetails[@"authors"][0];
         
-        //book.subtitle = bookDetails[@"subtitle"];
-        book.publisher = bookDetails[@"publisher"];
-        book.date = bookDetails[@"publishedDate"];
-        book.bookDescription = bookDetails[@"description"];
-        book.language = bookDetails[@"language"];
-        book.pages = bookDetails[@"pageCount"];
+        bookResult.subtitle = bookDetails[@"subtitle"];
+        bookResult.publisher = bookDetails[@"publisher"];
+        bookResult.date = bookDetails[@"publishedDate"];
+        bookResult.bookDescription = bookDetails[@"description"];
+        bookResult.language = bookDetails[@"language"];
+        bookResult.pages = bookDetails[@"pageCount"];
         
-        //book.categories = bookDetails[@"categories"][0];
-        //book.type = bookDetails[@"printType"];
+        bookResult.categories = bookDetails[@"categories"][0];
+        bookResult.type = bookDetails[@"printType"];
+        bookResult.imageLink = bookDetails[@"imageLinks"][@"thumbnail"];
+        bookResult.previewLink = bookDetails[@"previewLink"];
+        
+        bookResult.rating = bookDetails[@"averageRating"];
+        bookResult.numberOfRatings = bookDetails[@"ratingsCount"];
+        
         //book.ISBN = bookDetails[@"industryIdentifiers"][@"identifier"];
-        book.imageLink = bookDetails[@"imageLinks"][@"thumbnail"];
-        //book.previewLink = bookDetails[@"previewLink"];
         
-        //book.rating = bookDetails[@"averageRating"];
-        //book.numberOfRatings = bookDetails[@"ratingsCount"];
-        
-        [self.bookResults addObject:book];
+        [self.bookResults addObject:bookResult];
     }
 }
 

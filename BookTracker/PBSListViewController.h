@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@class PBSBook;
-
 @interface PBSListViewController : UITableViewController
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;

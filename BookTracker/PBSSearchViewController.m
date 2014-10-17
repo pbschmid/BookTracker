@@ -9,7 +9,7 @@
 #import "PBSSearchViewController.h"
 #import "PBSDetailViewController.h"
 #import "PBSBookStore.h"
-#import "PBSBook.h"
+#import "PBSBookResult.h"
 #import "PBSBookCell.h"
 #import "MBProgressHUD.h"
 #import <AFNetworking/UIImageView+AFNetworking.h>
@@ -86,7 +86,7 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
      if ([self.bookStore.bookResults count] > 0) {
          
          PBSBookCell *cell = (PBSBookCell *)[tableView dequeueReusableCellWithIdentifier:@"BookCell"];
-         PBSBook *bookResult = self.bookStore.bookResults[indexPath.row];
+         PBSBookResult *bookResult = self.bookStore.bookResults[indexPath.row];
      
          cell.titleLabel.text = [NSString stringWithFormat:@"%@", bookResult.title];
          cell.authorLabel.text = [NSString stringWithFormat:@"%@", bookResult.author];
@@ -120,8 +120,8 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    PBSBook *book = self.bookStore.bookResults[indexPath.row];
-    [self performSegueWithIdentifier:@"BookDetail" sender:book];
+    PBSBookResult *bookResult = self.bookStore.bookResults[indexPath.row];
+    [self performSegueWithIdentifier:@"BookDetail" sender:bookResult];
 }
 
 #pragma mark - Navigation
@@ -134,7 +134,8 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
                                                                             action:nil];
     
     PBSDetailViewController *detailVC = (PBSDetailViewController *)segue.destinationViewController;
-    detailVC.bookResult = (PBSBook *)sender;
+    detailVC.bookResult = (PBSBookResult *)sender;
+    detailVC.savedBook = NO;
     detailVC.managedObjectContext = self.managedObjectContext;
 }
 
@@ -173,6 +174,7 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
     [hud show:YES];
     
     self.bookStore = [[PBSBookStore alloc] init];
+    self.bookStore.managedObjectContext = self.managedObjectContext;
     [self.bookStore fetchResultsForText:self.searchBar.text
                                category:self.searchBar.selectedScopeButtonIndex
                              completion:^(BOOL finished, NSError *error) {

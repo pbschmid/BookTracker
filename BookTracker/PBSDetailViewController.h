@@ -8,11 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+@class PBSBookResult;
 @class PBSBook;
 
 @interface PBSDetailViewController : UITableViewController
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, strong) PBSBook *bookResult;
+@property (nonatomic, strong) PBSBookResult *bookResult;
+@property (nonatomic, strong) PBSBook *book;
+
+@property (nonatomic, assign, getter=isSavedBook) BOOL savedBook;
 
 @end
