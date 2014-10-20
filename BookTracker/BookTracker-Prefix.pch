@@ -16,6 +16,3 @@
     #import <CoreData/CoreData.h>
     #import <AFNetworking/AFNetworking.h>
 #endif
-
-static NSString * const ManagedObjectContextSaveDidFailNotification =
-                        @"ManagedObjectContextSaveDidFailNotification";

@@ -14,6 +14,9 @@
 #import "PBSBook.h"
 #import <AFNetworking/UIImageView+AFNetworking.h>
 
+static NSString * const ManagedObjectContextSaveDidFailNotification =
+                        @"ManagedObjectContextSaveDidFailNotification";
+
 @interface PBSDetailViewController () <UINavigationControllerDelegate>
 
 @property (nonatomic, weak) IBOutlet UITextView *descriptionTextView;
@@ -93,6 +96,7 @@
                                                                                   style:UIBarButtonItemStylePlain
                                                                                  target:self
                                                                                  action:@selector(save)];
+        self.navigationItem.rightBarButtonItem.enabled = YES;
         
         [self.coverImageView setImageWithURL:[NSURL URLWithString:self.bookResult.imageLink]];
         self.titleLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.title];
@@ -124,11 +128,13 @@
     hud.labelText = @"Saving...";
     [hud show:YES];
     
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     NSLog(@"Saving: %@", self.bookResult.title);
     
     PBSBook *book = [NSEntityDescription insertNewObjectForEntityForName:@"PBSBook"
                                                           inManagedObjectContext:self.managedObjectContext];
     book.title = self.bookResult.title;
+    book.subtitle = self.bookResult.subtitle;
     book.author = self.bookResult.author;
     book.publisher = self.bookResult.publisher;
     book.bookDescription = self.bookResult.bookDescription;

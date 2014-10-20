@@ -120,8 +120,8 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
         
         PBSBookResult *bookResult = [[PBSBookResult alloc] init];
         bookResult.title = bookDetails[@"title"];
-        bookResult.author = bookDetails[@"authors"][0];
         bookResult.subtitle = bookDetails[@"subtitle"];
+        bookResult.author = bookDetails[@"authors"][0];
         bookResult.publisher = bookDetails[@"publisher"];
         bookResult.date = bookDetails[@"publishedDate"];
         bookResult.bookDescription = bookDetails[@"description"];

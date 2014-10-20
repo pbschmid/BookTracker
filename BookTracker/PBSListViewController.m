@@ -12,12 +12,12 @@
 #import "PBSBookCell.h"
 #import "PBSBook.h"
 
-static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
+static NSString * const ManagedObjectContextSaveDidFailNotification =
+                        @"ManagedObjectContextSaveDidFailNotification";
 
 @interface PBSListViewController () <UINavigationControllerDelegate, NSFetchedResultsControllerDelegate>
 
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
-@property (nonatomic, assign) NSInteger objectsInDataStore;
 
 @end
 
@@ -30,7 +30,6 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
     self = [super initWithStyle:style];
     if (self) {
         self.navigationController.delegate = self;
-        self.objectsInDataStore = 0;
     }
     return self;
 }
@@ -60,8 +59,7 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
     
-    UINib *cellNib = [UINib nibWithNibName:NothingFoundCellIdentifier bundle:nil];
-    [self.tableView registerNib:cellNib forCellReuseIdentifier:NothingFoundCellIdentifier];
+    self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -70,10 +68,7 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
     
     [NSFetchedResultsController deleteCacheWithName:@"BookCache"];
     [self performFetch];
-    
-    if (self.objectsInDataStore > 0) {
-        self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    }
+    [self.tableView reloadData];
 }
 
 #pragma mark - Core Data
@@ -87,8 +82,6 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
                                               ManagedObjectContextSaveDidFailNotification object:nil];
         return;
     }
-    
-    self.objectsInDataStore = self.fetchedResultsController.fetchedObjects.count;
 }
 
 - (NSFetchedResultsController *)fetchedResultsController
@@ -129,22 +122,10 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.objectsInDataStore > 0) {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MyBookCell"];
+    [self configureCell:cell atIndexPath:indexPath];
         
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MyBookCell"];
-        [self configureCell:cell atIndexPath:indexPath];
-        
-        return cell;
-        
-    } else {
-        
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NothingFoundCellIdentifier
-                                                                forIndexPath:indexPath];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        cell.userInteractionEnabled = NO;
-        
-        return cell;
-    }
+    return cell;
 }
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
@@ -173,11 +154,7 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
            editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.objectsInDataStore > 0) {
-        return UITableViewCellEditingStyleDelete;
-    } else {
-        return UITableViewCellEditingStyleNone;
-    }
+    return UITableViewCellEditingStyleDelete;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
@@ -227,25 +204,21 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 {
     switch (type) {
             
-        // insert
         case NSFetchedResultsChangeInsert:
-            [self.tableView insertRowsAtIndexPaths:@[indexPath]
+            [self.tableView insertRowsAtIndexPaths:@[newIndexPath]
                                   withRowAnimation:UITableViewRowAnimationFade];
             break;
             
-        // delete
         case NSFetchedResultsChangeDelete:
             [self.tableView deleteRowsAtIndexPaths:@[indexPath]
                                   withRowAnimation:UITableViewRowAnimationFade];
             break;
-            
-        // move
-        case NSFetchedResultsChangeMove:
+        
+        case NSFetchedResultsChangeUpdate:
             [self configureCell:[self.tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
             break;
-            
-        // update
-        case NSFetchedResultsChangeUpdate:
+        
+        case NSFetchedResultsChangeMove:
             [self.tableView deleteRowsAtIndexPaths:@[indexPath]
                                   withRowAnimation:UITableViewRowAnimationFade];
             [self.tableView insertRowsAtIndexPaths:@[newIndexPath]
@@ -262,13 +235,11 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 {
     switch (type) {
             
-            // insert
         case NSFetchedResultsChangeInsert:
             [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex]
                           withRowAnimation:UITableViewRowAnimationFade];
             break;
             
-            // delete
         case NSFetchedResultsChangeDelete:
             [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex]
                           withRowAnimation:UITableViewRowAnimationFade];

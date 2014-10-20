@@ -12,9 +12,10 @@
         <attribute name="publisher" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="rating" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="ratingNumber" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="subtitle" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="PBSBook" positionX="-63" positionY="-18" width="128" height="225"/>
+        <element name="PBSBook" positionX="-63" positionY="-18" width="128" height="240"/>
     </elements>
 </model>
