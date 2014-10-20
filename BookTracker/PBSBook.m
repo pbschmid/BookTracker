@@ -12,14 +12,17 @@
 @implementation PBSBook
 
 @dynamic title;
+@dynamic subtitle;
 @dynamic date;
+@dynamic imageLink;
+@dynamic previewLink;
+@dynamic author;
 @dynamic publisher;
 @dynamic bookDescription;
 @dynamic language;
 @dynamic pages;
-@dynamic isbn;
-@dynamic imageLink;
-@dynamic previewLink;
-@dynamic author;
+@dynamic rating;
+@dynamic ratingNumber;
+@dynamic isbn10;
 
 @end

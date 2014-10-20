@@ -130,9 +130,12 @@
     book.date = self.bookResult.date;
     book.imageLink = self.bookResult.imageLink;
     book.previewLink = self.bookResult.previewLink;
-    book.pages = self.bookResult.pages;
     book.language = self.bookResult.language;
-    book.isbn = self.bookResult.ISBN;
+    
+    book.pages = self.bookResult.pages;
+    book.rating = self.bookResult.rating;
+    book.ratingNumber = self.bookResult.numberOfRatings;
+    book.isbn10 = self.bookResult.ISBN10;
     
     NSError *error;
     if (![self.managedObjectContext save:&error]) {

@@ -168,24 +168,27 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 
 - (void)searchForBook
 {
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.mode = MBProgressHUDModeIndeterminate;
-    hud.labelText = @"Loading...";
-    [hud show:YES];
+    if ([self.searchBar.text length] > 0) {
+        
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.mode = MBProgressHUDModeIndeterminate;
+        hud.labelText = @"Loading...";
+        [hud show:YES];
     
-    self.bookStore = [[PBSBookStore alloc] init];
-    self.bookStore.managedObjectContext = self.managedObjectContext;
-    [self.bookStore fetchResultsForText:self.searchBar.text
-                               category:self.searchBar.selectedScopeButtonIndex
-                             completion:^(BOOL finished, NSError *error) {
-                                 if (finished) {
-                                     [hud hide:YES];
-                                     [self booksRetrieved];
-                                 } else {
-                                     [hud hide:YES];
-                                     [self showNetworkError:error];
-                                 }
-                             }];
+        self.bookStore = [[PBSBookStore alloc] init];
+        self.bookStore.managedObjectContext = self.managedObjectContext;
+        [self.bookStore fetchResultsForText:self.searchBar.text
+                                   category:self.searchBar.selectedScopeButtonIndex
+                                 completion:^(BOOL finished, NSError *error) {
+                                     if (finished) {
+                                         [hud hide:YES];
+                                         [self booksRetrieved];
+                                     } else {
+                                         [hud hide:YES];
+                                         [self showNetworkError:error];
+                                     }
+                                 }];
+    }
 }
 
 - (void)booksRetrieved

@@ -14,7 +14,7 @@
 
 static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 
-@interface PBSListViewController ()
+@interface PBSListViewController () <UINavigationControllerDelegate>
 
 @property (nonatomic, strong) NSMutableArray *savedBooks;
 
@@ -28,6 +28,7 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 {
     self = [super initWithStyle:style];
     if (self) {
+        self.navigationController.delegate = self;
     }
     return self;
 }
@@ -59,6 +60,10 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 {
     [super viewWillAppear:animated];
     [self fetchObjectContext];
+    
+    if ([self.savedBooks count] > 0) {
+        self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    }
 }
 
 #pragma mark - Core Data
@@ -125,12 +130,6 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
     }
 }
 
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
-           editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return UITableViewCellEditingStyleNone;
-}
-
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -139,6 +138,28 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
     
     PBSBook *book = self.savedBooks[indexPath.row];
     [self performSegueWithIdentifier:@"MyBookDetail" sender:book];
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
+           editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([self.savedBooks count] > 0) {
+        return UITableViewCellEditingStyleDelete;
+    } else {
+        return UITableViewCellEditingStyleNone;
+    }
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
+                                            forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        
+        #warning Delete from data model
+        
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
+                         withRowAnimation:UITableViewRowAnimationFade];
+    }
 }
 
 #pragma mark - Navigation

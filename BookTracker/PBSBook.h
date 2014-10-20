@@ -13,14 +13,18 @@
 @interface PBSBook : NSManagedObject
 
 @property (nonatomic, retain) NSString * title;
+@property (nonatomic, retain) NSString * subtitle;
 @property (nonatomic, retain) NSString * date;
 @property (nonatomic, retain) NSString * publisher;
 @property (nonatomic, retain) NSString * bookDescription;
 @property (nonatomic, retain) NSString * language;
-@property (nonatomic, retain) NSNumber * pages;
-@property (nonatomic, retain) NSNumber * isbn;
 @property (nonatomic, retain) NSString * imageLink;
 @property (nonatomic, retain) NSString * previewLink;
 @property (nonatomic, retain) NSString * author;
+
+@property (nonatomic, retain) NSNumber * pages;
+@property (nonatomic, retain) NSNumber * isbn10;
+@property (nonatomic, retain) NSNumber * rating;
+@property (nonatomic, retain) NSNumber * ratingNumber;
 
 @end

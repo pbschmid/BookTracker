@@ -70,31 +70,28 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
 
 - (void)fetchResultsForText:(NSString *)text category:(NSInteger)category completion:(CompletionBlock)block
 {
-    if ([text length] > 0) {
-        
-        NSString *urlString = [self createURLFromText:text category:category];
-        NSDictionary *params = @{@"format" : @"json"};
+    NSString *urlString = [self createURLFromText:text category:category];
+    NSDictionary *params = @{@"format" : @"json"};
     
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        manager.responseSerializer = [AFJSONResponseSerializer serializer];
-        manager.requestSerializer = [AFJSONRequestSerializer serializer];
-        [manager.requestSerializer setValue:@"userId" forHTTPHeaderField:GoogleAPIKey];
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    [manager.requestSerializer setValue:@"userId" forHTTPHeaderField:GoogleAPIKey];
         
-        [manager GET:urlString parameters:params success:^(AFHTTPRequestOperation *operation,
-                                                               id responseObject) {
+    [manager GET:urlString parameters:params success:^(AFHTTPRequestOperation *operation,
+                                                id responseObject) {
+        
+        NSLog(@"Success!");
+        //NSLog(@"%@", responseObject[@"items"]);
+        [self parseResponseObject:responseObject];
+        block(YES, nil);
             
-            NSLog(@"Success!");
-            //NSLog(@"%@", responseObject[@"items"]);
-            [self parseResponseObject:responseObject];
-            block(YES, nil);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            
-            NSLog(@"%@", [error userInfo]);
-            block(NO, error);
-            
-        }];
-    }
+        NSLog(@"%@", [error userInfo]);
+        block(NO, error);
+        
+    }];
 }
 
 #pragma mark - JSON parsing
@@ -110,6 +107,13 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
     
     self.bookResults = [[NSMutableArray alloc] init];
     
+    static NSNumberFormatter *formatter = nil;
+    
+    if (formatter == nil) {
+        formatter = [[NSNumberFormatter alloc] init];
+        [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+    }
+    
     for (NSDictionary *bookResult in results) {
         
         NSDictionary *bookDetails = bookResult[@"volumeInfo"];
@@ -117,23 +121,20 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
         PBSBookResult *bookResult = [[PBSBookResult alloc] init];
         bookResult.title = bookDetails[@"title"];
         bookResult.author = bookDetails[@"authors"][0];
-        
         bookResult.subtitle = bookDetails[@"subtitle"];
         bookResult.publisher = bookDetails[@"publisher"];
         bookResult.date = bookDetails[@"publishedDate"];
         bookResult.bookDescription = bookDetails[@"description"];
         bookResult.language = bookDetails[@"language"];
-        bookResult.pages = bookDetails[@"pageCount"];
-        
-        bookResult.categories = bookDetails[@"categories"][0];
-        bookResult.type = bookDetails[@"printType"];
         bookResult.imageLink = bookDetails[@"imageLinks"][@"thumbnail"];
         bookResult.previewLink = bookDetails[@"previewLink"];
         
+        bookResult.pages = bookDetails[@"pageCount"];
         bookResult.rating = bookDetails[@"averageRating"];
         bookResult.numberOfRatings = bookDetails[@"ratingsCount"];
         
-        //book.ISBN = bookDetails[@"industryIdentifiers"][@"identifier"];
+        bookResult.ISBN10 = [formatter numberFromString:
+                             bookDetails[@"industryIdentifiers"][0][@"identifier"]];
         
         [self.bookResults addObject:bookResult];
     }
