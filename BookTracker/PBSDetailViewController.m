@@ -119,6 +119,11 @@
 
 - (void)save
 {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeIndeterminate;
+    hud.labelText = @"Saving...";
+    [hud show:YES];
+    
     NSLog(@"Saving: %@", self.bookResult.title);
     
     PBSBook *book = [NSEntityDescription insertNewObjectForEntityForName:@"PBSBook"
@@ -142,6 +147,17 @@
         NSLog(@"Error Saving Objects: %@", [error localizedDescription]);
     }
     
+    [self performSelector:@selector(dismissViewController)
+               withObject:nil
+               afterDelay:1];
+    
+    [hud hide:YES afterDelay:1];
+}
+
+#pragma mark - Navigation
+
+- (void)dismissViewController
+{
     [self.navigationController popViewControllerAnimated:YES];
 }
 
