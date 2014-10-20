@@ -33,7 +33,23 @@
     listVC.managedObjectContext = self.managedObjectContext;
     
     [self customizeAppearance];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(showCoreDataError)
+                                                 name:ManagedObjectContextSaveDidFailNotification
+                                               object:nil];
+    
     return YES;
+}
+
+- (void)showCoreDataError
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Internal Error"
+                                                        message:@"There was an error saving the files."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil, nil];
+    [alertView show];
 }
 
 - (void)customizeAppearance

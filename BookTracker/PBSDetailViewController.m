@@ -145,6 +145,9 @@
     NSError *error;
     if (![self.managedObjectContext save:&error]) {
         NSLog(@"Error Saving Objects: %@", [error localizedDescription]);
+        [[NSNotificationCenter defaultCenter] postNotificationName:
+                                              ManagedObjectContextSaveDidFailNotification object:nil];
+        return;
     }
     
     [self performSelector:@selector(dismissViewController)

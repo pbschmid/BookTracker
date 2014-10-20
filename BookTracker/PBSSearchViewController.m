@@ -85,15 +85,9 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
  {
      if ([self.bookStore.bookResults count] > 0) {
          
-         PBSBookCell *cell = (PBSBookCell *)[tableView dequeueReusableCellWithIdentifier:@"BookCell"];
-         PBSBookResult *bookResult = self.bookStore.bookResults[indexPath.row];
-     
-         cell.titleLabel.text = [NSString stringWithFormat:@"%@", bookResult.title];
-         cell.authorLabel.text = [NSString stringWithFormat:@"%@", bookResult.author];
-         [cell.coverImageView setImageWithURL:[NSURL URLWithString:bookResult.imageLink]];
-         cell.coverImageView.layer.cornerRadius = 10.0f;
-         cell.coverImageView.clipsToBounds = YES;
-     
+         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"BookCell"];
+         [self configureCell:cell atIndexPath:indexPath];
+         
          return cell;
          
      } else {
@@ -104,9 +98,20 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
          cell.userInteractionEnabled = NO;
          
          return cell;
-         
      }
- }
+}
+
+- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    PBSBookCell *bookCell = (PBSBookCell *)cell;
+    PBSBookResult *bookResult = self.bookStore.bookResults[indexPath.row];
+    
+    bookCell.titleLabel.text = [NSString stringWithFormat:@"%@", bookResult.title];
+    bookCell.authorLabel.text = [NSString stringWithFormat:@"%@", bookResult.author];
+    [bookCell.coverImageView setImageWithURL:[NSURL URLWithString:bookResult.imageLink]];
+    bookCell.coverImageView.layer.cornerRadius = 10.0f;
+    bookCell.coverImageView.clipsToBounds = YES;
+}
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
            editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath

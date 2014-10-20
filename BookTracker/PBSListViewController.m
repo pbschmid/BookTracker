@@ -14,9 +14,10 @@
 
 static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 
-@interface PBSListViewController () <UINavigationControllerDelegate>
+@interface PBSListViewController () <UINavigationControllerDelegate, NSFetchedResultsControllerDelegate>
 
-@property (nonatomic, strong) NSMutableArray *savedBooks;
+@property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
+@property (nonatomic, assign) NSInteger objectsInDataStore;
 
 @end
 
@@ -29,8 +30,15 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
     self = [super initWithStyle:style];
     if (self) {
         self.navigationController.delegate = self;
+        self.objectsInDataStore = 0;
     }
     return self;
+}
+
+- (void)dealloc
+{
+    NSLog(@"Deallocating ListViewController...");
+    self.fetchedResultsController.delegate = nil;
 }
 
 #pragma mark - View life cycle
@@ -59,32 +67,50 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self fetchObjectContext];
     
-    if ([self.savedBooks count] > 0) {
+    [NSFetchedResultsController deleteCacheWithName:@"BookCache"];
+    [self performFetch];
+    
+    if (self.objectsInDataStore > 0) {
         self.navigationItem.rightBarButtonItem = self.editButtonItem;
     }
 }
 
 #pragma mark - Core Data
 
-- (void)fetchObjectContext
+- (void)performFetch
 {
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PBSBook"
-                                              inManagedObjectContext:self.managedObjectContext];
-    [fetchRequest setEntity:entity];
-    
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:NO];
-    [fetchRequest setSortDescriptors:@[sortDescriptor]];
-    
     NSError *error;
-    NSArray *fetchedObjects = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
-    if (fetchedObjects == nil) {
+    if (![self.fetchedResultsController performFetch:&error]) {
         NSLog(@"Error Loading Objects: %@", [error localizedDescription]);
+        [[NSNotificationCenter defaultCenter] postNotificationName:
+                                              ManagedObjectContextSaveDidFailNotification object:nil];
+        return;
     }
     
-    self.savedBooks = (NSMutableArray *)fetchedObjects;
+    self.objectsInDataStore = self.fetchedResultsController.fetchedObjects.count;
+}
+
+- (NSFetchedResultsController *)fetchedResultsController
+{
+    if (_fetchedResultsController == nil) {
+        
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        NSEntityDescription *entity = [NSEntityDescription entityForName:@"PBSBook"
+                                                  inManagedObjectContext:self.managedObjectContext];
+        [fetchRequest setEntity:entity];
+        
+        NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:NO];
+        [fetchRequest setSortDescriptors:@[sortDescriptor]];
+        [fetchRequest setFetchBatchSize:20];
+        
+        _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
+                                                            managedObjectContext:self.managedObjectContext
+                                                              sectionNameKeyPath:nil
+                                                                       cacheName:@"BookCache"];
+        _fetchedResultsController.delegate = self;
+    }
+    return _fetchedResultsController;
 }
 
 #pragma mark - UITableViewDataSource
@@ -96,25 +122,17 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if ([self.savedBooks count] > 0) {
-        return [self.savedBooks count];
-    } else {
-        return 1;
-    }
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections]
+                                                    objectAtIndex:section];
+    return [sectionInfo numberOfObjects];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([self.savedBooks count] > 0) {
+    if (self.objectsInDataStore > 0) {
         
-        PBSBookCell *cell = (PBSBookCell *)[tableView dequeueReusableCellWithIdentifier:@"MyBookCell"];
-        PBSBook *book = self.savedBooks[indexPath.row];
-        
-        cell.titleLabel.text = [NSString stringWithFormat:@"%@", book.title];
-        cell.authorLabel.text = [NSString stringWithFormat:@"%@", book.author];
-        [cell.coverImageView setImageWithURL:[NSURL URLWithString:book.imageLink]];
-        cell.coverImageView.layer.cornerRadius = 10.0f;
-        cell.coverImageView.clipsToBounds = YES;
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MyBookCell"];
+        [self configureCell:cell atIndexPath:indexPath];
         
         return cell;
         
@@ -126,8 +144,20 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
         cell.userInteractionEnabled = NO;
         
         return cell;
-        
     }
+}
+
+- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    PBSBookCell *bookCell = (PBSBookCell *)cell;
+    PBSBook *book = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    
+    bookCell.titleLabel.text = [NSString stringWithFormat:@"%@", book.title];
+    bookCell.authorLabel.text = [NSString stringWithFormat:@"%@", book.author];
+    
+    [bookCell.coverImageView setImageWithURL:[NSURL URLWithString:book.imageLink]];
+    bookCell.coverImageView.layer.cornerRadius = 10.0f;
+    bookCell.coverImageView.clipsToBounds = YES;
 }
 
 #pragma mark - UITableViewDelegate
@@ -136,14 +166,14 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    PBSBook *book = self.savedBooks[indexPath.row];
+    PBSBook *book = [self.fetchedResultsController objectAtIndexPath:indexPath];
     [self performSegueWithIdentifier:@"MyBookDetail" sender:book];
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
            editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([self.savedBooks count] > 0) {
+    if (self.objectsInDataStore > 0) {
         return UITableViewCellEditingStyleDelete;
     } else {
         return UITableViewCellEditingStyleNone;
@@ -155,10 +185,16 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
-        #warning Delete from data model
+        PBSBook *book = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        [self.managedObjectContext deleteObject:book];
         
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
-                         withRowAnimation:UITableViewRowAnimationFade];
+        NSError *error;
+        if (![self.managedObjectContext save:&error]) {
+            NSLog(@"Error Updating Objects: %@", [error localizedDescription]);
+            [[NSNotificationCenter defaultCenter] postNotificationName:
+                                                  ManagedObjectContextSaveDidFailNotification object:nil];
+            return;
+        }
     }
 }
 
@@ -175,6 +211,75 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
     detailVC.book = (PBSBook *)sender;
     detailVC.savedBook = YES;
     detailVC.managedObjectContext = self.managedObjectContext;
+}
+
+#pragma mark - NSFetchedResultsControllerDelegate
+
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.tableView beginUpdates];
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
+       atIndexPath:(NSIndexPath *)indexPath
+     forChangeType:(NSFetchedResultsChangeType)type
+      newIndexPath:(NSIndexPath *)newIndexPath
+{
+    switch (type) {
+            
+        // insert
+        case NSFetchedResultsChangeInsert:
+            [self.tableView insertRowsAtIndexPaths:@[indexPath]
+                                  withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        // delete
+        case NSFetchedResultsChangeDelete:
+            [self.tableView deleteRowsAtIndexPaths:@[indexPath]
+                                  withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        // move
+        case NSFetchedResultsChangeMove:
+            [self configureCell:[self.tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            break;
+            
+        // update
+        case NSFetchedResultsChangeUpdate:
+            [self.tableView deleteRowsAtIndexPaths:@[indexPath]
+                                  withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView insertRowsAtIndexPaths:@[newIndexPath]
+                                  withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+    }
+}
+
+- (void)controller:(NSFetchedResultsController *)controller
+  didChangeSection:(id<NSFetchedResultsSectionInfo>)sectionInfo
+           atIndex:(NSUInteger)sectionIndex
+     forChangeType:(NSFetchedResultsChangeType)type
+{
+    switch (type) {
+            
+            // insert
+        case NSFetchedResultsChangeInsert:
+            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex]
+                          withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+            // delete
+        case NSFetchedResultsChangeDelete:
+            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex]
+                          withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+    }
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.tableView endUpdates];
 }
 
 #pragma mark - Memory Management
