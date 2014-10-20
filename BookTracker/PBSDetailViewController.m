@@ -17,7 +17,7 @@
 static NSString * const ManagedObjectContextSaveDidFailNotification =
                         @"ManagedObjectContextSaveDidFailNotification";
 
-@interface PBSDetailViewController () <UINavigationControllerDelegate>
+@interface PBSDetailViewController () <UINavigationControllerDelegate, UITextViewDelegate>
 
 @property (nonatomic, weak) IBOutlet UITextView *descriptionTextView;
 @property (nonatomic, weak) IBOutlet UIImageView *coverImageView;
