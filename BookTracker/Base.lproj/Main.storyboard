@@ -244,7 +244,7 @@
         <scene sceneID="fB3-EB-3Ul">
             <objects>
                 <navigationController definesPresentationContext="YES" id="kAh-Td-QN0" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Search" id="a7o-gg-VUj"/>
+                    <tabBarItem key="tabBarItem" title="Search" image="first" id="a7o-gg-VUj"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="j0Y-Ey-mtI">
                         <rect key="frame" x="0.0" y="0.0" width="0.0" height="44"/>
@@ -323,7 +323,7 @@
         <scene sceneID="N4a-ot-zug">
             <objects>
                 <navigationController definesPresentationContext="YES" id="SZb-bz-Kog" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="MyBooks" id="XVW-kf-sci"/>
+                    <tabBarItem key="tabBarItem" title="MyBooks" image="second" id="XVW-kf-sci"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="Qkb-ml-hUO">
                         <rect key="frame" x="0.0" y="0.0" width="0.0" height="44"/>
@@ -338,6 +338,10 @@
             <point key="canvasLocation" x="731" y="423"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="first" width="48" height="48"/>
+        <image name="second" width="48" height="48"/>
+    </resources>
     <color key="tintColor" red="0.54117647059999996" green="0.35294117650000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
