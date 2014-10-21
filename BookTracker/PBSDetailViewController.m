@@ -58,7 +58,7 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
     
     self.navigationItem.titleView = titleLabel;
     
-    [self configureViewForBookResult];
+    [self configureView];
 }
 
 #pragma mark - UITableViewDataSource
@@ -75,11 +75,24 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 
 #pragma mark - Customization
 
-- (void)configureViewForBookResult
+- (void)configureView
 {
     self.coverImageView.layer.cornerRadius = 10.0f;
     self.coverImageView.clipsToBounds = YES;
+    [self customizeAppearance];
     
+    if (!self.savedBook) {
+        
+        [self configureViewForLoadedBook];
+        
+    } else if (self.savedBook) {
+        
+        [self configureViewForSavedBook];
+    }
+}
+
+- (void)customizeAppearance
+{
     self.descriptionTextView.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f
                                                           blue:19/255.0f alpha:0.8f];
     self.publisherLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f
@@ -89,34 +102,34 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
     self.authorLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:1.0f];
     self.pagesLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:0.8f];
     self.dateLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:0.8f];
+}
+
+- (void)configureViewForLoadedBook
+{
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Save"
+                                                                              style:UIBarButtonItemStylePlain
+                                                                             target:self
+                                                                             action:@selector(save)];
+    self.navigationItem.rightBarButtonItem.enabled = YES;
     
-    if (!self.savedBook) {
-        
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Save"
-                                                                                  style:UIBarButtonItemStylePlain
-                                                                                 target:self
-                                                                                 action:@selector(save)];
-        self.navigationItem.rightBarButtonItem.enabled = YES;
-        
-        [self.coverImageView setImageWithURL:[NSURL URLWithString:self.bookResult.imageLink]];
-        self.titleLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.title];
-        self.authorLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.author];
-        self.pagesLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.pages];
-        self.dateLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.date];
-        self.publisherLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.publisher];
-        self.descriptionTextView.text = [NSString stringWithFormat:@"%@", self.bookResult.bookDescription];
-        
-    } else if (self.savedBook) {
-        
-        [self.coverImageView setImageWithURL:[NSURL URLWithString:self.book.imageLink]];
-        self.titleLabel.text = [NSString stringWithFormat:@"%@", self.book.title];
-        self.authorLabel.text = [NSString stringWithFormat:@"%@", self.book.author];
-        self.pagesLabel.text = [NSString stringWithFormat:@"%@", self.book.pages];
-        self.dateLabel.text = [NSString stringWithFormat:@"%@", self.book.date];
-        self.publisherLabel.text = [NSString stringWithFormat:@"%@", self.book.publisher];
-        self.descriptionTextView.text = [NSString stringWithFormat:@"%@", self.book.bookDescription];
-        
-    }
+    [self.coverImageView setImageWithURL:[NSURL URLWithString:self.bookResult.imageLink]];
+    self.titleLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.title];
+    self.authorLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.author];
+    self.pagesLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.pages];
+    self.publisherLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.publisher];
+    self.descriptionTextView.text = [NSString stringWithFormat:@"%@", self.bookResult.bookDescription];
+    self.dateLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.year];
+}
+
+- (void)configureViewForSavedBook
+{
+    [self.coverImageView setImageWithURL:[NSURL URLWithString:self.book.imageLink]];
+    self.titleLabel.text = [NSString stringWithFormat:@"%@", self.book.title];
+    self.authorLabel.text = [NSString stringWithFormat:@"%@", self.book.author];
+    self.pagesLabel.text = [NSString stringWithFormat:@"%@", self.book.pages];
+    self.publisherLabel.text = [NSString stringWithFormat:@"%@", self.book.publisher];
+    self.descriptionTextView.text = [NSString stringWithFormat:@"%@", self.book.bookDescription];
+    self.dateLabel.text = [NSString stringWithFormat:@"%@", self.book.year];
 }
 
 #pragma mark - Core Data
@@ -138,7 +151,7 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
     book.author = self.bookResult.author;
     book.publisher = self.bookResult.publisher;
     book.bookDescription = self.bookResult.bookDescription;
-    book.date = self.bookResult.date;
+    book.year = self.bookResult.year;
     book.imageLink = self.bookResult.imageLink;
     book.previewLink = self.bookResult.previewLink;
     book.language = self.bookResult.language;

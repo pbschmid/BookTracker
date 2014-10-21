@@ -107,13 +107,6 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
     
     self.bookResults = [[NSMutableArray alloc] init];
     
-    static NSNumberFormatter *formatter = nil;
-    
-    if (formatter == nil) {
-        formatter = [[NSNumberFormatter alloc] init];
-        [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
-    }
-    
     for (NSDictionary *bookResult in results) {
         
         NSDictionary *bookDetails = bookResult[@"volumeInfo"];
@@ -123,7 +116,6 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
         bookResult.subtitle = bookDetails[@"subtitle"];
         bookResult.author = bookDetails[@"authors"][0];
         bookResult.publisher = bookDetails[@"publisher"];
-        bookResult.date = bookDetails[@"publishedDate"];
         bookResult.bookDescription = bookDetails[@"description"];
         bookResult.language = bookDetails[@"language"];
         bookResult.imageLink = bookDetails[@"imageLinks"][@"thumbnail"];
@@ -133,11 +125,28 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
         bookResult.rating = bookDetails[@"averageRating"];
         bookResult.numberOfRatings = bookDetails[@"ratingsCount"];
         
-        bookResult.ISBN10 = [formatter numberFromString:
-                             bookDetails[@"industryIdentifiers"][0][@"identifier"]];
+        bookResult.year = [self formatDate:bookDetails[@"publishedDate"]];
+        bookResult.ISBN10 = [self formatNumber:bookDetails[@"industryIdentifiers"][0][@"identifier"]];
         
         [self.bookResults addObject:bookResult];
     }
+}
+
+#pragma mark - Formatters
+
+- (NSString *)formatDate:(NSString *)date
+{
+    return [date substringToIndex:4];
+}
+
+- (NSNumber *)formatNumber:(NSString *)number
+{
+    static NSNumberFormatter *numberFormatter = nil;
+    if (numberFormatter == nil) {
+        numberFormatter = [[NSNumberFormatter alloc] init];
+        [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
+    }
+    return [numberFormatter numberFromString:number];
 }
 
 @end

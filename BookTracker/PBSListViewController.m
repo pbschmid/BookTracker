@@ -93,7 +93,7 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
                                                   inManagedObjectContext:self.managedObjectContext];
         [fetchRequest setEntity:entity];
         
-        NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:NO];
+        NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"year" ascending:NO];
         [fetchRequest setSortDescriptors:@[sortDescriptor]];
         [fetchRequest setFetchBatchSize:20];
         

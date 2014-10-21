@@ -14,13 +14,13 @@
 
 @property (nonatomic, retain) NSString * title;
 @property (nonatomic, retain) NSString * subtitle;
-@property (nonatomic, retain) NSString * date;
+@property (nonatomic, retain) NSString * author;
 @property (nonatomic, retain) NSString * publisher;
 @property (nonatomic, retain) NSString * bookDescription;
 @property (nonatomic, retain) NSString * language;
 @property (nonatomic, retain) NSString * imageLink;
 @property (nonatomic, retain) NSString * previewLink;
-@property (nonatomic, retain) NSString * author;
+@property (nonatomic, retain) NSString * year;
 
 @property (nonatomic, retain) NSNumber * pages;
 @property (nonatomic, retain) NSNumber * isbn10;

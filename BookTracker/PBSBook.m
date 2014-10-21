@@ -13,7 +13,7 @@
 
 @dynamic title;
 @dynamic subtitle;
-@dynamic date;
+@dynamic year;
 @dynamic imageLink;
 @dynamic previewLink;
 @dynamic author;
