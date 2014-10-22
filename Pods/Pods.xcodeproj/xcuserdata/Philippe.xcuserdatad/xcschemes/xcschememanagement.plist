@@ -14,6 +14,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Pods-BookTracker-MSCellAccessory.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-BookTracker.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -22,17 +27,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>74E2A5401DE9D413D3E1A7C9</key>
+		<key>426DAD2F579FE51DD2FA977E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>7E759543C05BA1F54BE0117E</key>
+		<key>470AE49424D29B074DDB222A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9FB242A0D3FAC3E04083E41E</key>
+		<key>8C82A9800617433FD855D798</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>996B7D48B187F9209BDC0BFB</key>
 		<dict>
 			<key>primary</key>
 			<true/>

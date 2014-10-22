@@ -21,13 +21,16 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - MBProgressHUD (0.9)
+  - MSCellAccessory (1.1.2)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.0)
   - MBProgressHUD (~> 0.8)
+  - MSCellAccessory
 
 SPEC CHECKSUMS:
   AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
   MBProgressHUD: 2038dbcf3dce73215abed6001657043d53aa79a8
+  MSCellAccessory: 5f5b839e14bbd5de6c3dacb4b0d3ae5a63741778
 
 COCOAPODS: 0.34.0

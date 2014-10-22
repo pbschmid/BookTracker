@@ -8,6 +8,8 @@ pod 'MBProgressHUD', '~> 0.8'
 
 pod 'AFNetworking', '~> 2.0'
 
+pod 'MSCellAccessory'
+
 end
 
 target "BookTrackerTests" do

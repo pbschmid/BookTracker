@@ -8,6 +8,7 @@
 
 #import "PBSBookCell.h"
 #import <AFNetworking/UIImageView+AFNetworking.h>
+#import <MSCellAccessory/MSCellAccessory.h>
 
 @implementation PBSBookCell
 
@@ -25,6 +26,12 @@
     selectedView.backgroundColor = [UIColor colorWithRed:45/255.0f green:29/255.0f
                                                     blue:19/255.0f alpha:0.5f];
     self.selectedBackgroundView = selectedView;
+    
+    self.accessoryView = [MSCellAccessory accessoryWithType:FLAT_DISCLOSURE_INDICATOR
+                                                      color:[UIColor colorWithRed:45/255.0f
+                                                                            green:29/255.0f
+                                                                             blue:19/255.0f
+                                                                            alpha:0.8f]];
     
     self.titleLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:1.0f];
     self.titleLabel.backgroundColor = [UIColor clearColor];
