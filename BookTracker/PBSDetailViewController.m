@@ -10,6 +10,7 @@
 #import "PBSSearchViewController.h"
 #import "PBSListViewController.h"
 #import "PBSWebViewController.h"
+#import "PBSTextViewController.h"
 #import "MBProgressHUD.h"
 #import "PBSBookResult.h"
 #import "PBSBook.h"
@@ -42,6 +43,7 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
     self = [super initWithStyle:style];
     if (self) {
         self.navigationController.delegate = self;
+        self.descriptionTextView.delegate = self;
     }
     return self;
 }
@@ -61,7 +63,6 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
     [titleLabel sizeToFit];
     
     self.navigationItem.titleView = titleLabel;
-    
     [self configureView];
 }
 
@@ -176,7 +177,17 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
         
         PBSWebViewController *webVC = (PBSWebViewController *)segue.destinationViewController;
         webVC.urlString = (NSString *)sender;
+        
+    } else if ([segue.identifier isEqualToString:@"TextView"]) {
+        
+        PBSTextViewController *textVC = (PBSTextViewController *)segue.destinationViewController;
+        textVC.textToShow = (NSString *)sender;
     }
+    
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                                                             style:UIBarButtonItemStylePlain
+                                                                            target:nil
+                                                                            action:nil];
 }
 
 #pragma mark - Core Data
@@ -221,6 +232,14 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
                afterDelay:1];
     
     [hud hide:YES afterDelay:1];
+}
+
+#pragma mark - UITextViewDelegate
+
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView
+{
+    [self performSegueWithIdentifier:@"TextView" sender:self.descriptionTextView.text];
+    return NO;
 }
 
 #pragma mark - Memory Management

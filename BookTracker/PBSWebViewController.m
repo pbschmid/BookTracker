@@ -69,7 +69,6 @@
                                                          action:@selector(goForward)];
     
     self.navigationItem.rightBarButtonItems = @[self.forwardButton, self.backButton];
-    self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
 }
 
 #pragma mark - UIWebViewDelegate
