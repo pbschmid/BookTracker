@@ -59,11 +59,11 @@
 
 - (void)customizeNavigationBar
 {
-    self.backButton = [[UIBarButtonItem alloc] initWithTitle:@"Back"
+    self.backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ChevronLeft"]
                                                        style:UIBarButtonItemStylePlain
                                                       target:self
                                                       action:@selector(goBack)];
-    self.forwardButton = [[UIBarButtonItem alloc] initWithTitle:@"Forward"
+    self.forwardButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ChevronRight"]
                                                           style:UIBarButtonItemStylePlain
                                                          target:self
                                                          action:@selector(goForward)];
