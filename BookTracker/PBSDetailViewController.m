@@ -235,12 +235,47 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 
 - (void)showMenu
 {
-    UIActionSheet *menu = [[UIActionSheet alloc] initWithTitle:nil
-                                                      delegate:self
-                                             cancelButtonTitle:@"Cancel"
-                                        destructiveButtonTitle:nil
-                                             otherButtonTitles:@"Save", nil];
-    [menu showInView:self.view];
+    if ([self checkForDuplicates]) {
+        
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Duplicate"
+                                                            message:@"You already saved this book."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil, nil];
+        [alertView show];
+        
+    } else {
+        
+        UIActionSheet *menu = [[UIActionSheet alloc] initWithTitle:nil
+                                                          delegate:self
+                                                 cancelButtonTitle:@"Cancel"
+                                            destructiveButtonTitle:nil
+                                                 otherButtonTitles:@"Save", nil];
+        [menu showInView:self.view];
+    }
+}
+
+- (BOOL)checkForDuplicates
+{
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PBSBook"
+                                              inManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:entity];
+    
+    NSError *error;
+    NSArray *fetchedObjects = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (!fetchedObjects) {
+        NSLog(@"Error: %@. Could not check objects for duplicates.", [error userInfo]);
+    }
+    
+    for (PBSBook *book in fetchedObjects) {
+        if ([book.title isEqualToString:self.bookResult.title] &&
+            [book.author isEqualToString:self.bookResult.author] &&
+            [book.year isEqualToString:self.bookResult.year]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 #pragma mark - Core Data
