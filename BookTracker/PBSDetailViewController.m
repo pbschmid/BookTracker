@@ -19,7 +19,8 @@
 static NSString * const ManagedObjectContextSaveDidFailNotification =
                         @"ManagedObjectContextSaveDidFailNotification";
 
-@interface PBSDetailViewController () <UINavigationControllerDelegate, UITextViewDelegate>
+@interface PBSDetailViewController () <UINavigationControllerDelegate, UITextViewDelegate,
+                                       UIActionSheetDelegate>
 
 @property (nonatomic, weak) IBOutlet UITextView *descriptionTextView;
 @property (nonatomic, weak) IBOutlet UIImageView *coverImageView;
@@ -107,7 +108,7 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Save"
                                                                               style:UIBarButtonItemStylePlain
                                                                              target:self
-                                                                             action:@selector(save)];
+                                                                             action:@selector(showMenu)];
     self.navigationItem.rightBarButtonItem.enabled = YES;
     
     [self.coverImageView setImageWithURL:[NSURL URLWithString:self.bookResult.imageLink]];
@@ -164,6 +165,48 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
     }
 }
 
+#pragma mark - UITextViewDelegate
+
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView
+{
+    [self performSegueWithIdentifier:@"TextView" sender:self.descriptionTextView.text];
+    return NO;
+}
+
+#pragma mark - UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.mode = MBProgressHUDModeIndeterminate;
+        hud.labelText = @"Saving...";
+        [hud show:YES];
+        
+        NSLog(@"Saving: %@", self.bookResult.title);
+        [self save];
+        
+        [self performSelector:@selector(dismissViewController)
+                   withObject:nil
+                   afterDelay:1];
+        
+        [hud hide:YES afterDelay:1];
+    } else {
+        [actionSheet dismissWithClickedButtonIndex:1 animated:YES];
+    }
+}
+
+- (void)willPresentActionSheet:(UIActionSheet *)actionSheet
+{
+    for (UIView *subview in actionSheet.subviews) {
+        if ([subview isKindOfClass:[UIButton class]]) {
+            UIButton *menuButton = (UIButton *)subview;
+            [menuButton setTitleColor:[UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f
+                                                      alpha:1.0f] forState:UIControlStateNormal];
+        }
+    }
+}
+
 #pragma mark - Navigation
 
 - (void)dismissViewController
@@ -190,18 +233,20 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
                                                                             action:nil];
 }
 
+- (void)showMenu
+{
+    UIActionSheet *menu = [[UIActionSheet alloc] initWithTitle:nil
+                                                      delegate:self
+                                             cancelButtonTitle:@"Cancel"
+                                        destructiveButtonTitle:nil
+                                             otherButtonTitles:@"Save", nil];
+    [menu showInView:self.view];
+}
+
 #pragma mark - Core Data
 
 - (void)save
 {
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.mode = MBProgressHUDModeIndeterminate;
-    hud.labelText = @"Saving...";
-    [hud show:YES];
-    
-    self.navigationItem.rightBarButtonItem.enabled = NO;
-    NSLog(@"Saving: %@", self.bookResult.title);
-    
     PBSBook *book = [NSEntityDescription insertNewObjectForEntityForName:@"PBSBook"
                                                           inManagedObjectContext:self.managedObjectContext];
     book.title = self.bookResult.title;
@@ -226,20 +271,6 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
                                               ManagedObjectContextSaveDidFailNotification object:nil];
         return;
     }
-    
-    [self performSelector:@selector(dismissViewController)
-               withObject:nil
-               afterDelay:1];
-    
-    [hud hide:YES afterDelay:1];
-}
-
-#pragma mark - UITextViewDelegate
-
-- (BOOL)textViewShouldBeginEditing:(UITextView *)textView
-{
-    [self performSegueWithIdentifier:@"TextView" sender:self.descriptionTextView.text];
-    return NO;
 }
 
 #pragma mark - Memory Management

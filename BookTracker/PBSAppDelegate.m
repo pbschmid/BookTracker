@@ -65,9 +65,6 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
                                                                    blue:56/255.0f alpha:1.0f]];
     [[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:45/255.0f green:29/255.0f
                                                                    blue:19/255.0f alpha:1.0f]];
-    //[[UINavigationBar appearance] setBackgroundImage:[[UIImage alloc] init]
-    //                                   forBarMetrics:UIBarMetricsDefault];
-    //[[UINavigationBar appearance] setShadowImage:[[UIImage alloc] init]];
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application

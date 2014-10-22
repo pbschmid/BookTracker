@@ -35,6 +35,15 @@
     }
 }
 
+- (void)setPublisher:(NSString *)publisher
+{
+    if (publisher) {
+        _publisher = publisher;
+    } else {
+        _publisher = @"Unknown";
+    }
+}
+
 - (void)setPages:(NSNumber *)pages
 {
     if (pages) {
@@ -59,6 +68,15 @@
         _numberOfRatings = numberOfRatings;
     } else {
         _numberOfRatings = [NSNumber numberWithInt:0];
+    }
+}
+
+- (void)setBookDescription:(NSString *)bookDescription
+{
+    if (bookDescription) {
+        _bookDescription = bookDescription;
+    } else {
+        _bookDescription = @"No description available.";
     }
 }
 
