@@ -21,6 +21,18 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
 
 #pragma mark - Initializers
 
++ (PBSBookStore *)sharedPBSBookStore
+{
+    static PBSBookStore *_sharedPBSBookStore = nil;
+    static dispatch_once_t onceToken = 0;
+    
+    dispatch_once(&onceToken, ^{
+        _sharedPBSBookStore = [[PBSBookStore alloc] init];
+    });
+    
+    return _sharedPBSBookStore;
+}
+
 - (instancetype)init
 {
     self = [super init];

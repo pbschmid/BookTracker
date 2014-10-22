@@ -183,8 +183,7 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
         hud.labelText = @"Loading...";
         [hud show:YES];
     
-        self.bookStore = [[PBSBookStore alloc] init];
-        self.bookStore.managedObjectContext = self.managedObjectContext;
+        self.bookStore = [PBSBookStore sharedPBSBookStore];
         [self.bookStore fetchResultsForText:self.searchBar.text
                                    category:self.searchBar.selectedScopeButtonIndex
                                  completion:^(BOOL finished, NSError *error) {

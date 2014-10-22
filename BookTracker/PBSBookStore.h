@@ -12,9 +12,9 @@ typedef void (^CompletionBlock)(BOOL finished, NSError *error);
 
 @interface PBSBookStore : NSObject
 
-@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, readonly, strong) NSMutableArray *bookResults;
 
++ (PBSBookStore *)sharedPBSBookStore;
 - (void)fetchResultsForText:(NSString *)text category:(NSInteger)category completion:(CompletionBlock)block;
 
 @end
