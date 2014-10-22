@@ -174,11 +174,6 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 {
     if ([segue.identifier isEqualToString:@"Preview"]) {
         
-        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back"
-                                                                                 style:UIBarButtonItemStylePlain
-                                                                                target:nil
-                                                                                action:nil];
-        
         PBSWebViewController *webVC = (PBSWebViewController *)segue.destinationViewController;
         webVC.urlString = (NSString *)sender;
     }

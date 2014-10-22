@@ -11,6 +11,8 @@
 @interface PBSWebViewController () <UIWebViewDelegate>
 
 @property (nonatomic, strong) IBOutlet UIWebView *previewWebView;
+@property (nonatomic, strong) UIBarButtonItem *backButton;
+@property (nonatomic, strong) UIBarButtonItem *forwardButton;
 
 @end
 
@@ -39,9 +41,10 @@
     titleLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:1.0f];
     titleLabel.text = @"Preview";
     [titleLabel sizeToFit];
-    
     self.navigationItem.titleView = titleLabel;
+    
     [self configureWebView];
+    [self customizeNavigationBar];
 }
 
 - (void)configureWebView
@@ -52,7 +55,53 @@
     [self.previewWebView loadRequest:request];
 }
 
+#pragma mark - Customization
+
+- (void)customizeNavigationBar
+{
+    self.backButton = [[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                                       style:UIBarButtonItemStylePlain
+                                                      target:self
+                                                      action:@selector(goBack)];
+    self.forwardButton = [[UIBarButtonItem alloc] initWithTitle:@"Forward"
+                                                          style:UIBarButtonItemStylePlain
+                                                         target:self
+                                                         action:@selector(goForward)];
+    
+    self.navigationItem.rightBarButtonItems = @[self.forwardButton, self.backButton];
+    self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
+}
+
 #pragma mark - UIWebViewDelegate
+
+- (void)goBack
+{
+    if (self.previewWebView.canGoBack) {
+        [self.previewWebView goBack];
+    }
+}
+
+- (void)goForward
+{
+    if (self.previewWebView.canGoForward) {
+        [self.previewWebView goForward];
+    }
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    if (self.previewWebView.canGoBack) {
+        self.backButton.enabled = YES;
+    } else {
+        self.backButton.enabled = NO;
+    }
+    
+    if (self.previewWebView.canGoForward) {
+        self.forwardButton.enabled = YES;
+    } else {
+        self.forwardButton.enabled = NO;
+    }
+}
 
 #pragma mark - Memory Management
 

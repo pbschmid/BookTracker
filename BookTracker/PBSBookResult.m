@@ -19,7 +19,29 @@
 
 - (void)setYear:(NSString *)year
 {
-    _year = [self formatDate:year];
+    if (year) {
+        _year = [self formatDate:year];
+    } else {
+        _year = @"Unknown";
+    }
+}
+
+- (void)setAuthor:(NSString *)author
+{
+    if (author) {
+        _author = author;
+    } else {
+        _author = @"Unknown";
+    }
+}
+
+- (void)setPages:(NSNumber *)pages
+{
+    if (pages) {
+        _pages = pages;
+    } else {
+        _pages = [NSNumber numberWithChar:0];
+    }
 }
 
 - (void)setRating:(NSNumber *)rating
