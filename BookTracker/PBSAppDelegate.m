@@ -58,7 +58,7 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 - (void)customizeAppearance
 {
     [[UITabBar appearance] setBarTintColor:[UIColor colorWithRed:138/255.0f green:90/255.0f
-                                                            blue:56/255.0f alpha:1.0f]];
+                                                            blue:56/255.0f alpha:0.5f]];
     [[UITabBar appearance] setTintColor:[UIColor colorWithRed:45/255.0f green:29/255.0f
                                                          blue:19/255.0f alpha:1.0f]];
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:138/255.0f green:90/255.0f

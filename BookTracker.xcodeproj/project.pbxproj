@@ -24,6 +24,7 @@
 		373C68E319EE61C6005C3AEB /* BookTrackerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 373C68E219EE61C6005C3AEB /* BookTrackerTests.m */; };
 		373C68F319EE695D005C3AEB /* PBSDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 373C68F219EE695D005C3AEB /* PBSDetailViewController.m */; };
 		374EF96F19EEC75400CFD18E /* PBSBookCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 374EF96E19EEC75400CFD18E /* PBSBookCell.m */; };
+		376C629019F78EE100266D69 /* PBSWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 376C628F19F78EE100266D69 /* PBSWebViewController.m */; };
 		377B5F3219F012FD004F5523 /* PBSNothingFoundCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 377B5F3019F012FD004F5523 /* PBSNothingFoundCell.xib */; };
 		377E3C5019F15B4F00E07534 /* PBSBook.m in Sources */ = {isa = PBXBuildFile; fileRef = 377E3C4F19F15B4F00E07534 /* PBSBook.m */; };
 		377E3C5319F164E000E07534 /* PBSBookResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 377E3C5219F164E000E07534 /* PBSBookResult.m */; };
@@ -69,6 +70,8 @@
 		373C68F219EE695D005C3AEB /* PBSDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSDetailViewController.m; sourceTree = "<group>"; };
 		374EF96D19EEC75400CFD18E /* PBSBookCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSBookCell.h; sourceTree = "<group>"; };
 		374EF96E19EEC75400CFD18E /* PBSBookCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSBookCell.m; sourceTree = "<group>"; };
+		376C628E19F78EE100266D69 /* PBSWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSWebViewController.h; sourceTree = "<group>"; };
+		376C628F19F78EE100266D69 /* PBSWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSWebViewController.m; sourceTree = "<group>"; };
 		377B5F3119F012FD004F5523 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PBSNothingFoundCell.xib; sourceTree = "<group>"; };
 		377E3C4E19F15B4F00E07534 /* PBSBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSBook.h; sourceTree = "<group>"; };
 		377E3C4F19F15B4F00E07534 /* PBSBook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSBook.m; sourceTree = "<group>"; };
@@ -215,6 +218,7 @@
 				373C68EF19EE676F005C3AEB /* Search */,
 				373C68F019EE6777005C3AEB /* List */,
 				373C68F419EE6966005C3AEB /* Detail */,
+				376C629119F78EE700266D69 /* Web */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -244,6 +248,15 @@
 				373C68F219EE695D005C3AEB /* PBSDetailViewController.m */,
 			);
 			name = Detail;
+			sourceTree = "<group>";
+		};
+		376C629119F78EE700266D69 /* Web */ = {
+			isa = PBXGroup;
+			children = (
+				376C628E19F78EE100266D69 /* PBSWebViewController.h */,
+				376C628F19F78EE100266D69 /* PBSWebViewController.m */,
+			);
+			name = Web;
 			sourceTree = "<group>";
 		};
 		379694FC19EE70460069B446 /* Model */ = {
@@ -399,6 +412,7 @@
 				373C68C519EE61C6005C3AEB /* PBSAppDelegate.m in Sources */,
 				3796950219EE72AE0069B446 /* BookModel.xcdatamodeld in Sources */,
 				373C68F319EE695D005C3AEB /* PBSDetailViewController.m in Sources */,
+				376C629019F78EE100266D69 /* PBSWebViewController.m in Sources */,
 				373C68CB19EE61C6005C3AEB /* PBSSearchViewController.m in Sources */,
 				374EF96F19EEC75400CFD18E /* PBSBookCell.m in Sources */,
 				377E3C5319F164E000E07534 /* PBSBookResult.m in Sources */,

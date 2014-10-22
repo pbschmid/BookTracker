@@ -25,4 +25,6 @@
 @property (nonatomic, strong) NSNumber *rating;
 @property (nonatomic, strong) NSNumber *numberOfRatings;
 
+- (NSNumber *)formatNumber:(NSString *)number;
+
 @end

@@ -119,34 +119,17 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
         bookResult.bookDescription = bookDetails[@"description"];
         bookResult.language = bookDetails[@"language"];
         bookResult.imageLink = bookDetails[@"imageLinks"][@"thumbnail"];
-        bookResult.previewLink = bookDetails[@"previewLink"];
+        bookResult.previewLink = bookDetails[@"infoLink"];
         
         bookResult.pages = bookDetails[@"pageCount"];
         bookResult.rating = bookDetails[@"averageRating"];
         bookResult.numberOfRatings = bookDetails[@"ratingsCount"];
         
-        bookResult.year = [self formatDate:bookDetails[@"publishedDate"]];
-        bookResult.ISBN10 = [self formatNumber:bookDetails[@"industryIdentifiers"][0][@"identifier"]];
+        bookResult.year = bookDetails[@"publishedDate"];
+        bookResult.ISBN10 = [bookResult formatNumber:bookDetails[@"industryIdentifiers"][0][@"identifier"]];
         
         [self.bookResults addObject:bookResult];
     }
-}
-
-#pragma mark - Formatters
-
-- (NSString *)formatDate:(NSString *)date
-{
-    return [date substringToIndex:4];
-}
-
-- (NSNumber *)formatNumber:(NSString *)number
-{
-    static NSNumberFormatter *numberFormatter = nil;
-    if (numberFormatter == nil) {
-        numberFormatter = [[NSNumberFormatter alloc] init];
-        [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
-    }
-    return [numberFormatter numberFromString:number];
 }
 
 @end

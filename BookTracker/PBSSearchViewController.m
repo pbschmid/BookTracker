@@ -133,15 +133,18 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back"
-                                                                             style:UIBarButtonItemStylePlain
-                                                                            target:nil
-                                                                            action:nil];
-    
-    PBSDetailViewController *detailVC = (PBSDetailViewController *)segue.destinationViewController;
-    detailVC.bookResult = (PBSBookResult *)sender;
-    detailVC.savedBook = NO;
-    detailVC.managedObjectContext = self.managedObjectContext;
+    if ([segue.identifier isEqualToString:@"BookDetail"]) {
+        
+        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                                                                 style:UIBarButtonItemStylePlain
+                                                                                target:nil
+                                                                                action:nil];
+        
+        PBSDetailViewController *detailVC = (PBSDetailViewController *)segue.destinationViewController;
+        detailVC.bookResult = (PBSBookResult *)sender;
+        detailVC.savedBook = NO;
+        detailVC.managedObjectContext = self.managedObjectContext;
+    }
 }
 
 #pragma mark - UISearchBarDelegate

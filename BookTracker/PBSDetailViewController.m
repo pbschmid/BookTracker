@@ -9,6 +9,7 @@
 #import "PBSDetailViewController.h"
 #import "PBSSearchViewController.h"
 #import "PBSListViewController.h"
+#import "PBSWebViewController.h"
 #import "MBProgressHUD.h"
 #import "PBSBookResult.h"
 #import "PBSBook.h"
@@ -26,6 +27,9 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 @property (nonatomic, weak) IBOutlet UILabel *pagesLabel;
 @property (nonatomic, weak) IBOutlet UILabel *publisherLabel;
 @property (nonatomic, weak) IBOutlet UILabel *dateLabel;
+@property (nonatomic, weak) IBOutlet UILabel *languageLabel;
+@property (nonatomic, weak) IBOutlet UILabel *ratingLabel;
+@property (nonatomic, weak) IBOutlet UILabel *previewLabel;
 
 @end
 
@@ -61,18 +65,6 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
     [self configureView];
 }
 
-#pragma mark - UITableViewDataSource
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 4;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return 1;
-}
-
 #pragma mark - Customization
 
 - (void)configureView
@@ -85,7 +77,7 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
         
         [self configureViewForLoadedBook];
         
-    } else if (self.savedBook) {
+    } else {
         
         [self configureViewForSavedBook];
     }
@@ -102,6 +94,11 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
     self.authorLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:1.0f];
     self.pagesLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:0.8f];
     self.dateLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:0.8f];
+    self.ratingLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:0.8f];
+    self.previewLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f
+                                                   blue:19/255.0f alpha:0.8f];
+    self.languageLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f
+                                                    blue:19/255.0f alpha:0.8f];
 }
 
 - (void)configureViewForLoadedBook
@@ -115,10 +112,14 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
     [self.coverImageView setImageWithURL:[NSURL URLWithString:self.bookResult.imageLink]];
     self.titleLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.title];
     self.authorLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.author];
-    self.pagesLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.pages];
+    self.pagesLabel.text = [NSString stringWithFormat:@"%@ pages", self.bookResult.pages];
     self.publisherLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.publisher];
     self.descriptionTextView.text = [NSString stringWithFormat:@"%@", self.bookResult.bookDescription];
     self.dateLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.year];
+    self.languageLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.language];
+    self.previewLabel.text = [NSString stringWithFormat:@"More on %@", self.bookResult.title];
+    self.ratingLabel.text = [NSString stringWithFormat:@"Rating: %@/5 (%@ ratings)",
+                             self.bookResult.rating, self.bookResult.numberOfRatings];
 }
 
 - (void)configureViewForSavedBook
@@ -126,10 +127,61 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
     [self.coverImageView setImageWithURL:[NSURL URLWithString:self.book.imageLink]];
     self.titleLabel.text = [NSString stringWithFormat:@"%@", self.book.title];
     self.authorLabel.text = [NSString stringWithFormat:@"%@", self.book.author];
-    self.pagesLabel.text = [NSString stringWithFormat:@"%@", self.book.pages];
+    self.pagesLabel.text = [NSString stringWithFormat:@"%@ pages", self.book.pages];
     self.publisherLabel.text = [NSString stringWithFormat:@"%@", self.book.publisher];
     self.descriptionTextView.text = [NSString stringWithFormat:@"%@", self.book.bookDescription];
     self.dateLabel.text = [NSString stringWithFormat:@"%@", self.book.year];
+    self.languageLabel.text = [NSString stringWithFormat:@"%@", self.book.language];
+    self.previewLabel.text = [NSString stringWithFormat:@"More on %@", self.book.title];
+    self.ratingLabel.text = [NSString stringWithFormat:@"Rating: %@/5 (%@ ratings)",
+                             self.book.rating, self.book.ratingNumber];
+}
+
+#pragma mark - UITableViewDataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 3;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 1;
+}
+
+#pragma mark - UITableViewDelegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (indexPath.section == 2) {
+        if (!self.savedBook) {
+            [self performSegueWithIdentifier:@"Preview" sender:self.bookResult.previewLink];
+        } else {
+            [self performSegueWithIdentifier:@"Preview" sender:self.book.previewLink];
+        }
+    }
+}
+
+#pragma mark - Navigation
+
+- (void)dismissViewController
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"Preview"]) {
+        
+        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                                                                 style:UIBarButtonItemStylePlain
+                                                                                target:nil
+                                                                                action:nil];
+        
+        PBSWebViewController *webVC = (PBSWebViewController *)segue.destinationViewController;
+        webVC.urlString = (NSString *)sender;
+    }
 }
 
 #pragma mark - Core Data
@@ -176,19 +228,11 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
     [hud hide:YES afterDelay:1];
 }
 
-#pragma mark - Navigation
-
-- (void)dismissViewController
-{
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
 #pragma mark - Memory Management
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

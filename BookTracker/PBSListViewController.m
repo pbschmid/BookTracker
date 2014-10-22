@@ -179,15 +179,18 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back"
-                                                                             style:UIBarButtonItemStylePlain
-                                                                            target:nil
-                                                                            action:nil];
-    
-    PBSDetailViewController *detailVC = (PBSDetailViewController *)segue.destinationViewController;
-    detailVC.book = (PBSBook *)sender;
-    detailVC.savedBook = YES;
-    detailVC.managedObjectContext = self.managedObjectContext;
+    if ([segue.identifier isEqualToString:@"MyBookDetail"]) {
+        
+        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                                                                 style:UIBarButtonItemStylePlain
+                                                                                target:nil
+                                                                                action:nil];
+        
+        PBSDetailViewController *detailVC = (PBSDetailViewController *)segue.destinationViewController;
+        detailVC.book = (PBSBook *)sender;
+        detailVC.savedBook = YES;
+        detailVC.managedObjectContext = self.managedObjectContext;
+    }
 }
 
 #pragma mark - NSFetchedResultsControllerDelegate
