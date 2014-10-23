@@ -234,7 +234,9 @@
                             <outlet property="delegate" destination="ncR-Ue-fKL" id="cQC-7O-frb"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="BookDetail" id="EMc-AN-4fR"/>
+                    <navigationItem key="navigationItem" title="BookDetail" id="EMc-AN-4fR">
+                        <barButtonItem key="backBarButtonItem" title="Back" id="Rz5-hq-hTV"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="authorLabel" destination="XEk-Vz-wLZ" id="Kj6-te-vCZ"/>
                         <outlet property="coverImageView" destination="fQI-zg-dLc" id="rss-lf-xO3"/>

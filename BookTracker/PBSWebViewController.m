@@ -8,7 +8,7 @@
 
 #import "PBSWebViewController.h"
 
-@interface PBSWebViewController () <UIWebViewDelegate>
+@interface PBSWebViewController () <UIWebViewDelegate, UINavigationControllerDelegate>
 
 @property (nonatomic, strong) IBOutlet UIWebView *previewWebView;
 @property (nonatomic, strong) UIBarButtonItem *backButton;
@@ -24,6 +24,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        self.navigationController.delegate = self;
     }
     return self;
 }
@@ -68,6 +69,7 @@
                                                          target:self
                                                          action:@selector(goForward)];
     
+    self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
     self.navigationItem.rightBarButtonItems = @[self.forwardButton, self.backButton];
 }
 

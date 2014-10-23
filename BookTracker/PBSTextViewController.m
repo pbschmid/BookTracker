@@ -8,7 +8,7 @@
 
 #import "PBSTextViewController.h"
 
-@interface PBSTextViewController ()
+@interface PBSTextViewController () <UINavigationControllerDelegate>
 
 @end
 
@@ -20,6 +20,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        self.navigationController.delegate = self;
     }
     return self;
 }
@@ -43,6 +44,7 @@
     [titleLabel sizeToFit];
     
     self.navigationItem.titleView = titleLabel;
+    self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
 }
 
 #pragma mark - Memory Management

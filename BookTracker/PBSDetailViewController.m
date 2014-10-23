@@ -33,6 +33,8 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 @property (nonatomic, weak) IBOutlet UILabel *ratingLabel;
 @property (nonatomic, weak) IBOutlet UILabel *previewLabel;
 
+@property (nonatomic, assign, getter=isSegueTriggered) BOOL segueTriggered;
+
 @end
 
 @implementation PBSDetailViewController
@@ -65,6 +67,12 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
     
     self.navigationItem.titleView = titleLabel;
     [self configureView];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.segueTriggered = NO;
 }
 
 #pragma mark - Customization
@@ -157,11 +165,15 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section == 2) {
+        
+        NSString *previewLink;
         if (!self.savedBook) {
-            [self performSegueWithIdentifier:@"Preview" sender:self.bookResult.previewLink];
+            previewLink = self.bookResult.previewLink;
         } else {
-            [self performSegueWithIdentifier:@"Preview" sender:self.book.previewLink];
+            previewLink = self.book.previewLink;
         }
+        
+        [self performSegueWithIdentifier:@"Preview" sender:previewLink];
     }
 }
 
@@ -169,7 +181,11 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
-    [self performSegueWithIdentifier:@"TextView" sender:self.descriptionTextView.text];
+    if (!self.segueTriggered) {
+        NSLog(@"Triggering Touch Segue...");
+        self.segueTriggered = YES;
+        [self performSegueWithIdentifier:@"TextView" sender:self.descriptionTextView.text];
+    }
     return NO;
 }
 
@@ -221,16 +237,13 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
         PBSWebViewController *webVC = (PBSWebViewController *)segue.destinationViewController;
         webVC.urlString = (NSString *)sender;
         
-    } else if ([segue.identifier isEqualToString:@"TextView"]) {
+    }
+    
+    if ([segue.identifier isEqualToString:@"TextView"]) {
         
         PBSTextViewController *textVC = (PBSTextViewController *)segue.destinationViewController;
         textVC.textToShow = (NSString *)sender;
     }
-    
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back"
-                                                                             style:UIBarButtonItemStylePlain
-                                                                            target:nil
-                                                                            action:nil];
 }
 
 - (void)showMenu
