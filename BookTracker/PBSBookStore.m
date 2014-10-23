@@ -110,14 +110,16 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
 
 - (void)parseResponseObject:(NSDictionary *)responseObject
 {
-    NSArray *results = responseObject[@"items"];
+    self.bookResults = nil;
+    if (!self.bookResults) {
+        self.bookResults = [[NSMutableArray alloc] init];
+    }
     
+    NSArray *results = responseObject[@"items"];
     if (!results) {
         NSLog(@"Results empty.");
         return;
     }
-    
-    self.bookResults = [[NSMutableArray alloc] init];
     
     for (NSDictionary *bookResult in results) {
         

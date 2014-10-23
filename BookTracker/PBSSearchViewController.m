@@ -83,19 +83,19 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
  {
-     if ([self.bookStore.bookResults count] > 0) {
-         
-         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"BookCell"];
-         [self configureCell:cell atIndexPath:indexPath];
-         
-         return cell;
-         
-     } else {
+     if ([self.bookStore.bookResults count] == 0) {
          
          UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NothingFoundCellIdentifier
                                                                  forIndexPath:indexPath];
          cell.selectionStyle = UITableViewCellSelectionStyleNone;
          cell.userInteractionEnabled = NO;
+         
+         return cell;
+         
+     } else {
+         
+         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"BookCell"];
+         [self configureCell:cell atIndexPath:indexPath];
          
          return cell;
      }
