@@ -22,7 +22,7 @@
     if (year) {
         _year = [self formatDate:year];
     } else {
-        _year = @"Unknown";
+        _year = NSLocalizedString(@"Unknown", "Year: Unknown");
     }
 }
 
@@ -31,7 +31,7 @@
     if (author) {
         _author = author;
     } else {
-        _author = @"Unknown";
+        _author = NSLocalizedString(@"Unknown", "Author: Unknown");
     }
 }
 
@@ -40,7 +40,7 @@
     if (publisher) {
         _publisher = publisher;
     } else {
-        _publisher = @"Unknown";
+        _publisher = NSLocalizedString(@"Unknown", "Publisher: Unknown");
     }
 }
 
@@ -76,11 +76,11 @@
     if (bookDescription) {
         _bookDescription = bookDescription;
     } else {
-        _bookDescription = @"No description available.";
+        _bookDescription = NSLocalizedString(@"No description available.", "Description: Unknown");
     }
 }
 
-#pragma mark - ISO 639-1 Converter
+#pragma mark - ISO 639-1 Conversion
 
 + (NSDictionary *)ISOMap
 {
@@ -117,7 +117,7 @@
 - (NSNumber *)formatNumber:(NSString *)number
 {
     static NSNumberFormatter *numberFormatter = nil;
-    if (numberFormatter == nil) {
+    if (!numberFormatter) {
         numberFormatter = [[NSNumberFormatter alloc] init];
         [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
     }

@@ -19,7 +19,6 @@
 @property (nonatomic, copy) NSString *imageLink;
 @property (nonatomic, copy) NSString *previewLink;
 @property (nonatomic, copy) NSString *year;
-
 @property (nonatomic, strong) NSNumber *pages;
 @property (nonatomic, strong) NSNumber *ISBN10;
 @property (nonatomic, strong) NSNumber *rating;

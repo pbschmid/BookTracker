@@ -21,7 +21,6 @@
 @property (nonatomic, retain) NSString * imageLink;
 @property (nonatomic, retain) NSString * previewLink;
 @property (nonatomic, retain) NSString * year;
-
 @property (nonatomic, retain) NSNumber * pages;
 @property (nonatomic, retain) NSNumber * isbn10;
 @property (nonatomic, retain) NSNumber * rating;

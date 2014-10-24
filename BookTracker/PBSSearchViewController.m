@@ -6,15 +6,15 @@
 //  Copyright (c) 2014 Philippe Schmid. All rights reserved.
 //
 
+#import "PBSConstants.h"
 #import "PBSSearchViewController.h"
 #import "PBSDetailViewController.h"
 #import "PBSBookStore.h"
 #import "PBSBookResult.h"
 #import "PBSBookCell.h"
 #import "MBProgressHUD.h"
+#import <QuartzCore/QuartzCore.h>
 #import <AFNetworking/UIImageView+AFNetworking.h>
-
-static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 
 @interface PBSSearchViewController () <UINavigationControllerDelegate, UISearchBarDelegate>
 
@@ -36,17 +36,22 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
     return self;
 }
 
-- (void)dealloc
-{
-    NSLog(@"Deallocating SearchViewController...");
-}
-
 #pragma mark - View life cycle
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    [self customizeNavigationBar];
+    self.tableView.rowHeight = 88.0f;
+    self.tableView.separatorColor = [UIColor colorWithRed:45/255.0f green:29/255.0f
+                                                     blue:19/255.0f alpha:0.5f];
+    // load cell nib
+    UINib *cellNib = [UINib nibWithNibName:NothingFoundCellIdentifier bundle:nil];
+    [self.tableView registerNib:cellNib forCellReuseIdentifier:NothingFoundCellIdentifier];
+}
+
+- (void)customizeNavigationBar
+{
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
@@ -54,15 +59,7 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
     titleLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:1.0f];
     titleLabel.text = @"BookTracker";
     [titleLabel sizeToFit];
-    
     self.navigationItem.titleView = titleLabel;
-    
-    self.tableView.rowHeight = 88.0f;
-    self.tableView.separatorColor = [UIColor colorWithRed:45/255.0f green:29/255.0f
-                                                     blue:19/255.0f alpha:0.5f];
-    
-    UINib *cellNib = [UINib nibWithNibName:NothingFoundCellIdentifier bundle:nil];
-    [self.tableView registerNib:cellNib forCellReuseIdentifier:NothingFoundCellIdentifier];
 }
 
 #pragma mark - UITableViewDataSource
@@ -84,28 +81,24 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
  {
      if ([self.bookStore.bookResults count] == 0) {
-         
+         // no results, show empty cell
          UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NothingFoundCellIdentifier
                                                                  forIndexPath:indexPath];
          cell.selectionStyle = UITableViewCellSelectionStyleNone;
          cell.userInteractionEnabled = NO;
-         
          return cell;
-         
      } else {
-         
+         // successfully fetched results, show cell with book details
          UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"BookCell"];
          [self configureCell:cell atIndexPath:indexPath];
-         
          return cell;
      }
 }
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    PBSBookCell *bookCell = (PBSBookCell *)cell;
     PBSBookResult *bookResult = self.bookStore.bookResults[indexPath.row];
-    
+    PBSBookCell *bookCell = (PBSBookCell *)cell;
     bookCell.titleLabel.text = [NSString stringWithFormat:@"%@", bookResult.title];
     bookCell.authorLabel.text = [NSString stringWithFormat:@"%@", bookResult.author];
     [bookCell.coverImageView setImageWithURL:[NSURL URLWithString:bookResult.imageLink]];
@@ -124,7 +117,6 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
     PBSBookResult *bookResult = self.bookStore.bookResults[indexPath.row];
     [self performSegueWithIdentifier:@"BookDetail" sender:bookResult];
 }
@@ -134,12 +126,6 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"BookDetail"]) {
-        
-        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back"
-                                                                                 style:UIBarButtonItemStylePlain
-                                                                                target:nil
-                                                                                action:nil];
-        
         PBSDetailViewController *detailVC = (PBSDetailViewController *)segue.destinationViewController;
         detailVC.bookResult = (PBSBookResult *)sender;
         detailVC.savedBook = NO;
@@ -178,11 +164,13 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 {
     if ([self.searchBar.text length] > 0) {
         
+        // show loading hud
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         hud.mode = MBProgressHUDModeIndeterminate;
-        hud.labelText = @"Loading...";
+        hud.labelText = NSLocalizedString(@"Loading...", @"HUD: Loading");
         [hud show:YES];
-    
+        
+        // ask shared store to search for book
         self.bookStore = [PBSBookStore sharedPBSBookStore];
         [self.bookStore fetchResultsForText:self.searchBar.text
                                    category:self.searchBar.selectedScopeButtonIndex
@@ -200,21 +188,21 @@ static NSString * const NothingFoundCellIdentifier = @"PBSNothingFoundCell";
 
 - (void)booksRetrieved
 {
-    NSLog(@"All Books Retrieved.");
     [self.tableView reloadData];
 }
 
 - (void)showNetworkError:(NSError *)error
 {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                        message:[error localizedDescription]
+                                                        message:NSLocalizedString(@"There was a network error. Please try again.", @"Error: Network")
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil, nil];
     [alertView show];
+    [self.tableView reloadData];
 }
 
-#pragma mark - Memory Management
+#pragma mark - Memory management
 
 - (void)didReceiveMemoryWarning
 {

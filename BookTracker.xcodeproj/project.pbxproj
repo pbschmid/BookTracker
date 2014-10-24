@@ -71,6 +71,7 @@
 		373C68F219EE695D005C3AEB /* PBSDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSDetailViewController.m; sourceTree = "<group>"; };
 		374EF96D19EEC75400CFD18E /* PBSBookCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSBookCell.h; sourceTree = "<group>"; };
 		374EF96E19EEC75400CFD18E /* PBSBookCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSBookCell.m; sourceTree = "<group>"; };
+		3762FB3C19FA8BFF0056134C /* PBSConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PBSConstants.h; sourceTree = "<group>"; };
 		376C628E19F78EE100266D69 /* PBSWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSWebViewController.h; sourceTree = "<group>"; };
 		376C628F19F78EE100266D69 /* PBSWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSWebViewController.m; sourceTree = "<group>"; };
 		3771394D19F7E0B600CBF7D6 /* PBSTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSTextViewController.h; sourceTree = "<group>"; };
@@ -276,6 +277,7 @@
 			isa = PBXGroup;
 			children = (
 				3796950019EE72AE0069B446 /* BookModel.xcdatamodeld */,
+				3762FB3C19FA8BFF0056134C /* PBSConstants.h */,
 				377E3C4E19F15B4F00E07534 /* PBSBook.h */,
 				377E3C4F19F15B4F00E07534 /* PBSBook.m */,
 				377E3C5119F164E000E07534 /* PBSBookResult.h */,

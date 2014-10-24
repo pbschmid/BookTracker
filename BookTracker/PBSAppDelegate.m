@@ -6,12 +6,10 @@
 //  Copyright (c) 2014 Philippe Schmid. All rights reserved.
 //
 
+#import "PBSConstants.h"
 #import "PBSAppDelegate.h"
 #import "PBSSearchViewController.h"
 #import "PBSListViewController.h"
-
-static NSString * const ManagedObjectContextSaveDidFailNotification =
-                        @"ManagedObjectContextSaveDidFailNotification";
 
 @interface PBSAppDelegate ()
 
@@ -28,27 +26,25 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
     UITabBarController *tabBarController = (UITabBarController *)self.window.rootViewController;
     UINavigationController *nvc1 = tabBarController.viewControllers[0];
     UINavigationController *nvc2 = tabBarController.viewControllers[1];
-    
     PBSSearchViewController *searchVC = (PBSSearchViewController *)nvc1.topViewController;
     PBSListViewController *listVC = (PBSListViewController *)nvc2.topViewController;
-    
     searchVC.managedObjectContext = self.managedObjectContext;
     listVC.managedObjectContext = self.managedObjectContext;
-    
     [self customizeAppearance];
     
+    // application-wide notification for core data errors
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(showCoreDataError)
                                                  name:ManagedObjectContextSaveDidFailNotification
                                                object:nil];
-    
     return YES;
 }
 
 - (void)showCoreDataError
 {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Internal Error"
-                                                        message:@"There was an error saving the files."
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Internal Error",
+                                                                                  @"Internal Error: Title")
+                                                        message:NSLocalizedString(@"There was an error accessing the files.", @"Internal Error: Text")
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil, nil];
@@ -130,7 +126,7 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
                                                                  URL:storeURL
                                                              options:nil
                                                                error:&error]) {
-            NSLog(@"Error creating SQLiteStore: %@ %@", error, [error userInfo]);
+            [self showCoreDataError];
         }
     }
     return _persistentStoreCoordinator;
@@ -140,7 +136,6 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 {
     if (_managedObjectContext == nil) {
         NSPersistentStoreCoordinator *coordinator = self.persistentStoreCoordinator;
-        
         if (coordinator != nil) {
             _managedObjectContext = [[NSManagedObjectContext alloc] init];
             [_managedObjectContext setPersistentStoreCoordinator:coordinator];

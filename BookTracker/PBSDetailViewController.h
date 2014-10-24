@@ -14,9 +14,8 @@
 @interface PBSDetailViewController : UITableViewController
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, assign, getter=isSavedBook) BOOL savedBook;
 @property (nonatomic, strong) PBSBookResult *bookResult;
 @property (nonatomic, strong) PBSBook *book;
-
-@property (nonatomic, assign, getter=isSavedBook) BOOL savedBook;
 
 @end

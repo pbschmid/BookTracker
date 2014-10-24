@@ -34,16 +34,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
-    titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:1.0f];
-    titleLabel.text = @"Preview";
-    [titleLabel sizeToFit];
-    self.navigationItem.titleView = titleLabel;
-    
     [self configureWebView];
     [self customizeNavigationBar];
 }
@@ -56,8 +46,6 @@
     [self.previewWebView loadRequest:request];
 }
 
-#pragma mark - Customization
-
 - (void)customizeNavigationBar
 {
     self.backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ChevronLeft"]
@@ -68,9 +56,17 @@
                                                           style:UIBarButtonItemStylePlain
                                                          target:self
                                                          action:@selector(goForward)];
-    
     self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
     self.navigationItem.rightBarButtonItems = @[self.forwardButton, self.backButton];
+    
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    titleLabel.backgroundColor = [UIColor clearColor];
+    titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    titleLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:1.0f];
+    titleLabel.text = @"Preview";
+    [titleLabel sizeToFit];
+    self.navigationItem.titleView = titleLabel;
 }
 
 #pragma mark - UIWebViewDelegate
@@ -91,12 +87,14 @@
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
+    // enable/disable back button
     if (self.previewWebView.canGoBack) {
         self.backButton.enabled = YES;
     } else {
         self.backButton.enabled = NO;
     }
     
+    // enable/disable forward button
     if (self.previewWebView.canGoForward) {
         self.forwardButton.enabled = YES;
     } else {
@@ -104,7 +102,7 @@
     }
 }
 
-#pragma mark - Memory Management
+#pragma mark - Memory management
 
 - (void)didReceiveMemoryWarning
 {

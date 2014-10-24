@@ -92,7 +92,9 @@
                             <outlet property="delegate" destination="H6J-xh-pyd" id="hjf-mP-SNw"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="BookTracker" id="tD2-cu-K9R"/>
+                    <navigationItem key="navigationItem" title="BookTracker" id="tD2-cu-K9R">
+                        <barButtonItem key="backBarButtonItem" title="Back" id="gUP-RN-Vz8"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="searchBar" destination="Vxw-uE-Pnl" id="oui-bq-Zfq"/>
                         <segue destination="ncR-Ue-fKL" kind="push" identifier="BookDetail" id="G55-SL-Lyo"/>
@@ -388,7 +390,9 @@
                             <outlet property="delegate" destination="dx8-9e-LWS" id="OzO-Hh-Ugh"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="MyBooks" id="8XV-Yq-RQx"/>
+                    <navigationItem key="navigationItem" title="MyBooks" id="8XV-Yq-RQx">
+                        <barButtonItem key="backBarButtonItem" title="Back" id="T3Y-Cz-N8T"/>
+                    </navigationItem>
                     <connections>
                         <segue destination="ncR-Ue-fKL" kind="push" identifier="MyBookDetail" id="NEV-Y4-5MC"/>
                     </connections>
@@ -427,6 +431,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="NEV-Y4-5MC"/>
+        <segue reference="G55-SL-Lyo"/>
     </inferredMetricsTieBreakers>
 </document>

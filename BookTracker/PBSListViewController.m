@@ -6,14 +6,13 @@
 //  Copyright (c) 2014 Philippe Schmid. All rights reserved.
 //
 
-#import <AFNetworking/UIImageView+AFNetworking.h>
+#import "PBSConstants.h"
 #import "PBSListViewController.h"
 #import "PBSDetailViewController.h"
 #import "PBSBookCell.h"
 #import "PBSBook.h"
-
-static NSString * const ManagedObjectContextSaveDidFailNotification =
-                        @"ManagedObjectContextSaveDidFailNotification";
+#import <AFNetworking/UIImageView+AFNetworking.h>
+#import <QuartzCore/QuartzCore.h>
 
 @interface PBSListViewController () <UINavigationControllerDelegate, NSFetchedResultsControllerDelegate>
 
@@ -36,7 +35,6 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 
 - (void)dealloc
 {
-    NSLog(@"Deallocating ListViewController...");
     self.fetchedResultsController.delegate = nil;
 }
 
@@ -45,11 +43,22 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    [self customizeNavigationBar];
     self.tableView.rowHeight = 88.0f;
     self.tableView.separatorColor = [UIColor colorWithRed:45/255.0f green:29/255.0f
                                                      blue:19/255.0f alpha:0.5f];
-    
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [NSFetchedResultsController deleteCacheWithName:@"BookCache"];
+    [self performFetch];
+    [self.tableView reloadData];
+}
+
+- (void)customizeNavigationBar
+{
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
@@ -58,17 +67,7 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
     titleLabel.text = @"MyBooks";
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
-    
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    [NSFetchedResultsController deleteCacheWithName:@"BookCache"];
-    [self performFetch];
-    [self.tableView reloadData];
 }
 
 #pragma mark - Core Data
@@ -77,7 +76,7 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 {
     NSError *error;
     if (![self.fetchedResultsController performFetch:&error]) {
-        NSLog(@"Error Loading Objects: %@", [error localizedDescription]);
+        // show core data error
         [[NSNotificationCenter defaultCenter] postNotificationName:
                                               ManagedObjectContextSaveDidFailNotification object:nil];
         return;
@@ -87,12 +86,10 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 - (NSFetchedResultsController *)fetchedResultsController
 {
     if (_fetchedResultsController == nil) {
-        
         NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
         NSEntityDescription *entity = [NSEntityDescription entityForName:@"PBSBook"
                                                   inManagedObjectContext:self.managedObjectContext];
         [fetchRequest setEntity:entity];
-        
         NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"year" ascending:NO];
         [fetchRequest setSortDescriptors:@[sortDescriptor]];
         [fetchRequest setFetchBatchSize:20];
@@ -124,18 +121,15 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MyBookCell"];
     [self configureCell:cell atIndexPath:indexPath];
-        
     return cell;
 }
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    PBSBookCell *bookCell = (PBSBookCell *)cell;
     PBSBook *book = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    
+    PBSBookCell *bookCell = (PBSBookCell *)cell;
     bookCell.titleLabel.text = [NSString stringWithFormat:@"%@", book.title];
     bookCell.authorLabel.text = [NSString stringWithFormat:@"%@", book.author];
-    
     [bookCell.coverImageView setImageWithURL:[NSURL URLWithString:book.imageLink]];
     bookCell.coverImageView.layer.cornerRadius = 10.0f;
     bookCell.coverImageView.clipsToBounds = YES;
@@ -146,7 +140,6 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
     PBSBook *book = [self.fetchedResultsController objectAtIndexPath:indexPath];
     [self performSegueWithIdentifier:@"MyBookDetail" sender:book];
 }
@@ -161,13 +154,11 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
                                             forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        
         PBSBook *book = [self.fetchedResultsController objectAtIndexPath:indexPath];
         [self.managedObjectContext deleteObject:book];
-        
         NSError *error;
         if (![self.managedObjectContext save:&error]) {
-            NSLog(@"Error Updating Objects: %@", [error localizedDescription]);
+            // core data error
             [[NSNotificationCenter defaultCenter] postNotificationName:
                                                   ManagedObjectContextSaveDidFailNotification object:nil];
             return;
@@ -180,12 +171,6 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"MyBookDetail"]) {
-        
-        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back"
-                                                                                 style:UIBarButtonItemStylePlain
-                                                                                target:nil
-                                                                                action:nil];
-        
         PBSDetailViewController *detailVC = (PBSDetailViewController *)segue.destinationViewController;
         detailVC.book = (PBSBook *)sender;
         detailVC.savedBook = YES;
@@ -206,7 +191,6 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
       newIndexPath:(NSIndexPath *)newIndexPath
 {
     switch (type) {
-            
         case NSFetchedResultsChangeInsert:
             [self.tableView insertRowsAtIndexPaths:@[newIndexPath]
                                   withRowAnimation:UITableViewRowAnimationFade];
@@ -227,7 +211,6 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
             [self.tableView insertRowsAtIndexPaths:@[newIndexPath]
                                   withRowAnimation:UITableViewRowAnimationFade];
             break;
-            
     }
 }
 
@@ -237,7 +220,6 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
      forChangeType:(NSFetchedResultsChangeType)type
 {
     switch (type) {
-            
         case NSFetchedResultsChangeInsert:
             [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex]
                           withRowAnimation:UITableViewRowAnimationFade];
@@ -247,7 +229,6 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
             [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex]
                           withRowAnimation:UITableViewRowAnimationFade];
             break;
-            
     }
 }
 
@@ -256,7 +237,7 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
     [self.tableView endUpdates];
 }
 
-#pragma mark - Memory Management
+#pragma mark - Memory management
 
 - (void)didReceiveMemoryWarning
 {

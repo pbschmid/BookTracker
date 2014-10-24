@@ -24,12 +24,10 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
 + (PBSBookStore *)sharedPBSBookStore
 {
     static PBSBookStore *_sharedPBSBookStore = nil;
-    static dispatch_once_t onceToken = 0;
-    
-    dispatch_once(&onceToken, ^{
+    static dispatch_once_t oncePredicate = 0;
+    dispatch_once(&oncePredicate, ^{
         _sharedPBSBookStore = [[PBSBookStore alloc] init];
     });
-    
     return _sharedPBSBookStore;
 }
 
@@ -37,14 +35,8 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
 {
     self = [super init];
     if (self) {
-        NSLog(@"Initializing BookStore...");
     }
     return self;
-}
-
-- (void)dealloc
-{
-    NSLog(@"Deallocating BookStore...");
 }
 
 #pragma mark - AFNetworking
@@ -54,15 +46,19 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
     NSString *searchText;
     switch (category) {
         case 0:
+            // normal search
             searchText = text;
             break;
         case 1:
+            // title search
             searchText = [NSString stringWithFormat:@"intitle:%@", text];
             break;
         case 2:
+            // author search
             searchText = [NSString stringWithFormat:@"inauthor:%@", text];
             break;
         case 3:
+            // isbn search
             searchText = [NSString stringWithFormat:@"isbn:%@", text];
             break;
     }
@@ -70,13 +66,10 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
     NSLocale *locale = [NSLocale autoupdatingCurrentLocale];
     NSString *language = [locale localeIdentifier];
     NSString *countryCode = [locale objectForKey:NSLocaleCountryCode];
-    
     NSString *escapedText = [searchText stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
     NSString *urlString = [NSString stringWithFormat:
                 @"https://www.googleapis.com/books/v1/volumes?q=%@&maxResults=40&lang=%@&country=%@",
                 escapedText, language, countryCode];
-    
     return urlString;
 }
 
@@ -89,20 +82,14 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
     [manager.requestSerializer setValue:@"userId" forHTTPHeaderField:GoogleAPIKey];
-        
     [manager GET:urlString parameters:params success:^(AFHTTPRequestOperation *operation,
-                                                id responseObject) {
-        
-        NSLog(@"Success!");
-        //NSLog(@"%@", responseObject[@"items"]);
+                                                       id responseObject) {
+        // search successful, parse objects
         [self parseResponseObject:responseObject];
         block(YES, nil);
-            
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            
-        NSLog(@"%@", [error userInfo]);
+        // search failed, show network error
         block(NO, error);
-        
     }];
 }
 
@@ -110,21 +97,16 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
 
 - (void)parseResponseObject:(NSDictionary *)responseObject
 {
-    self.bookResults = nil;
-    if (!self.bookResults) {
-        self.bookResults = [[NSMutableArray alloc] init];
-    }
-    
+    self.bookResults = [[NSMutableArray alloc] init];
     NSArray *results = responseObject[@"items"];
     if (!results) {
+        // no results, return
         NSLog(@"Results empty.");
         return;
     }
     
     for (NSDictionary *bookResult in results) {
-        
         NSDictionary *bookDetails = bookResult[@"volumeInfo"];
-        
         PBSBookResult *bookResult = [[PBSBookResult alloc] init];
         bookResult.title = bookDetails[@"title"];
         bookResult.subtitle = bookDetails[@"subtitle"];
@@ -134,14 +116,11 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
         bookResult.language = bookDetails[@"language"];
         bookResult.imageLink = bookDetails[@"imageLinks"][@"thumbnail"];
         bookResult.previewLink = bookDetails[@"infoLink"];
-        
         bookResult.pages = bookDetails[@"pageCount"];
         bookResult.rating = bookDetails[@"averageRating"];
         bookResult.numberOfRatings = bookDetails[@"ratingsCount"];
-        
         bookResult.year = bookDetails[@"publishedDate"];
         bookResult.ISBN10 = [bookResult formatNumber:bookDetails[@"industryIdentifiers"][0][@"identifier"]];
-        
         [self.bookResults addObject:bookResult];
     }
 }

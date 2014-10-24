@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Philippe Schmid. All rights reserved.
 //
 
+#import "PBSConstants.h"
 #import "PBSDetailViewController.h"
 #import "PBSSearchViewController.h"
 #import "PBSListViewController.h"
@@ -15,9 +16,7 @@
 #import "PBSBookResult.h"
 #import "PBSBook.h"
 #import <AFNetworking/UIImageView+AFNetworking.h>
-
-static NSString * const ManagedObjectContextSaveDidFailNotification =
-                        @"ManagedObjectContextSaveDidFailNotification";
+#import <QuartzCore/QuartzCore.h>
 
 @interface PBSDetailViewController () <UINavigationControllerDelegate, UITextViewDelegate,
                                        UIActionSheetDelegate>
@@ -32,7 +31,6 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 @property (nonatomic, weak) IBOutlet UILabel *languageLabel;
 @property (nonatomic, weak) IBOutlet UILabel *ratingLabel;
 @property (nonatomic, weak) IBOutlet UILabel *previewLabel;
-
 @property (nonatomic, assign, getter=isSegueTriggered) BOOL segueTriggered;
 
 @end
@@ -56,16 +54,7 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
-    titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:1.0f];
-    titleLabel.text = @"BookDetail";
-    [titleLabel sizeToFit];
-    
-    self.navigationItem.titleView = titleLabel;
+    [self customizeNavigationBar];
     [self configureView];
 }
 
@@ -75,7 +64,19 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
     self.segueTriggered = NO;
 }
 
-#pragma mark - Customization
+- (void)customizeNavigationBar
+{
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    titleLabel.backgroundColor = [UIColor clearColor];
+    titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    titleLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:1.0f];
+    titleLabel.text = @"BookDetail";
+    [titleLabel sizeToFit];
+    self.navigationItem.titleView = titleLabel;
+}
+
+#pragma mark - Configure view with book details
 
 - (void)configureView
 {
@@ -84,11 +85,10 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
     [self customizeAppearance];
     
     if (!self.savedBook) {
-        
+        // configure view with fetched object
         [self configureViewForLoadedBook];
-        
     } else {
-        
+        // configure view with core data object
         [self configureViewForSavedBook];
     }
 }
@@ -99,7 +99,6 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
                                                           blue:19/255.0f alpha:0.8f];
     self.publisherLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f
                                                      blue:19/255.0f alpha:0.8f];
-    
     self.titleLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:1.0f];
     self.authorLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:1.0f];
     self.pagesLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:0.8f];
@@ -113,6 +112,7 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 
 - (void)configureViewForLoadedBook
 {
+    // only the fetched book result can be saved
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Save"
                                                                               style:UIBarButtonItemStylePlain
                                                                              target:self
@@ -165,14 +165,14 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section == 2) {
-        
         NSString *previewLink;
         if (!self.savedBook) {
+            // use loaded link from search result
             previewLink = self.bookResult.previewLink;
         } else {
+            // use saved link from core data
             previewLink = self.book.previewLink;
         }
-        
         [self performSegueWithIdentifier:@"Preview" sender:previewLink];
     }
 }
@@ -182,7 +182,7 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
     if (!self.segueTriggered) {
-        NSLog(@"Triggering Touch Segue...");
+        // avoid multiple segues with multiple touches
         self.segueTriggered = YES;
         [self performSegueWithIdentifier:@"TextView" sender:self.descriptionTextView.text];
     }
@@ -194,20 +194,16 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 0) {
+        // save button
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         hud.mode = MBProgressHUDModeIndeterminate;
-        hud.labelText = @"Saving...";
+        hud.labelText = NSLocalizedString(@"Saving...", @"Actionsheet: Saving");
         [hud show:YES];
-        
-        NSLog(@"Saving: %@", self.bookResult.title);
         [self save];
-        
-        [self performSelector:@selector(dismissViewController)
-                   withObject:nil
-                   afterDelay:1];
-        
+        [self performSelector:@selector(dismissViewController) withObject:nil afterDelay:1];
         [hud hide:YES afterDelay:1];
     } else {
+        // cancel button
         [actionSheet dismissWithClickedButtonIndex:1 animated:YES];
     }
 }
@@ -232,15 +228,14 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    // book preview segue
     if ([segue.identifier isEqualToString:@"Preview"]) {
-        
         PBSWebViewController *webVC = (PBSWebViewController *)segue.destinationViewController;
         webVC.urlString = (NSString *)sender;
-        
     }
     
+    // description segue
     if ([segue.identifier isEqualToString:@"TextView"]) {
-        
         PBSTextViewController *textVC = (PBSTextViewController *)segue.destinationViewController;
         textVC.textToShow = (NSString *)sender;
     }
@@ -249,21 +244,21 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 - (void)showMenu
 {
     if ([self checkForDuplicates]) {
-        
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Duplicate"
-                                                            message:@"You already saved this book."
+        // book already saved, show alert view
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Duplicate",
+                                                                                      @"Duplicate: Title")
+                                                            message:NSLocalizedString(@"You already saved this book.", @"Alert: Duplicate Text")
                                                            delegate:nil
                                                   cancelButtonTitle:@"OK"
                                                   otherButtonTitles:nil, nil];
         [alertView show];
-        
     } else {
-        
+        // new book, show action sheet for saving
         UIActionSheet *menu = [[UIActionSheet alloc] initWithTitle:nil
                                                           delegate:self
-                                                 cancelButtonTitle:@"Cancel"
+                                                 cancelButtonTitle:NSLocalizedString(@"You already saved this book.", @"Cancel Button: Title")
                                             destructiveButtonTitle:nil
-                                                 otherButtonTitles:@"Save", nil];
+                                                 otherButtonTitles:NSLocalizedString(@"Save", @"Save Button: Title"), nil];
         [menu showInView:self.view];
     }
 }
@@ -275,20 +270,23 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
                                               inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];
     
+    // fetch core data objects manually
     NSError *error;
     NSArray *fetchedObjects = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
     if (!fetchedObjects) {
-        NSLog(@"Error: %@. Could not check objects for duplicates.", [error userInfo]);
+        // show core data error
+        [[NSNotificationCenter defaultCenter] postNotificationName:ManagedObjectContextSaveDidFailNotification object:nil];
     }
     
+    // compare current book result to all saved books
     for (PBSBook *book in fetchedObjects) {
         if ([book.title isEqualToString:self.bookResult.title] &&
             [book.author isEqualToString:self.bookResult.author] &&
             [book.year isEqualToString:self.bookResult.year]) {
-            return YES;
+            return YES; // duplicate
         }
     }
-    return NO;
+    return NO; // no duplicate
 }
 
 #pragma mark - Core Data
@@ -296,7 +294,7 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
 - (void)save
 {
     PBSBook *book = [NSEntityDescription insertNewObjectForEntityForName:@"PBSBook"
-                                                          inManagedObjectContext:self.managedObjectContext];
+                                                  inManagedObjectContext:self.managedObjectContext];
     book.title = self.bookResult.title;
     book.subtitle = self.bookResult.subtitle;
     book.author = self.bookResult.author;
@@ -306,7 +304,6 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
     book.imageLink = self.bookResult.imageLink;
     book.previewLink = self.bookResult.previewLink;
     book.language = self.bookResult.language;
-    
     book.pages = self.bookResult.pages;
     book.rating = self.bookResult.rating;
     book.ratingNumber = self.bookResult.numberOfRatings;
@@ -314,14 +311,12 @@ static NSString * const ManagedObjectContextSaveDidFailNotification =
     
     NSError *error;
     if (![self.managedObjectContext save:&error]) {
-        NSLog(@"Error Saving Objects: %@", [error localizedDescription]);
-        [[NSNotificationCenter defaultCenter] postNotificationName:
-                                              ManagedObjectContextSaveDidFailNotification object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:ManagedObjectContextSaveDidFailNotification object:nil];
         return;
     }
 }
 
-#pragma mark - Memory Management
+#pragma mark - Memory management
 
 - (void)didReceiveMemoryWarning
 {
