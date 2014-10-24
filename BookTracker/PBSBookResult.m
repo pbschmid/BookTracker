@@ -87,16 +87,16 @@
     static NSDictionary *_language = nil;
     if (!_language) {
         _language = @{
-                     @"en" : @"English",
-                     @"fr" : @"French",
-                     @"de" : @"German",
-                     @"it" : @"Italian",
-                     @"es" : @"Spanish",
-                     @"zh" : @"Chinese",
-                     @"ja" : @"Japanese",
-                     @"sv" : @"Swedish",
-                     @"da" : @"Danish",
-                     @"no" : @"Norwegian",
+                     @"en" : NSLocalizedString(@"English", @"Converter: en"),
+                     @"fr" : NSLocalizedString(@"French", @"Converter: fr"),
+                     @"de" : NSLocalizedString(@"German", @"Converter: de"),
+                     @"it" : NSLocalizedString(@"Italian", @"Converter: it"),
+                     @"es" : NSLocalizedString(@"Spanish", @"Converter: es"),
+                     @"zh" : NSLocalizedString(@"Chinese", @"Converter: zh"),
+                     @"ja" : NSLocalizedString(@"Japanese", @"Converter: ja"),
+                     @"sv" : NSLocalizedString(@"Swedish", @"Converter: sv"),
+                     @"da" : NSLocalizedString(@"Danish", @"Converter: da"),
+                     @"no" : NSLocalizedString(@"Norwegian", @"Converter: no")
                      };
     }
     return _language;

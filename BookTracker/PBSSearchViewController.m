@@ -57,7 +57,7 @@
     titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     titleLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:1.0f];
-    titleLabel.text = @"BookTracker";
+    titleLabel.text = NSLocalizedString(@"BookTracker", @"Navigation: Title");
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
 }
@@ -193,7 +193,7 @@
 
 - (void)showNetworkError:(NSError *)error
 {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error")
                                                         message:NSLocalizedString(@"There was a network error. Please try again.", @"Error: Network")
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"

@@ -64,7 +64,7 @@
     titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     titleLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:1.0f];
-    titleLabel.text = @"Preview";
+    titleLabel.text = NSLocalizedString(@"Preview", @"Navigation: Title");
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
 }

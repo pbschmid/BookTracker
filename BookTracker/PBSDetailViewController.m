@@ -71,7 +71,7 @@
     titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     titleLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:1.0f];
-    titleLabel.text = @"BookDetail";
+    titleLabel.text = NSLocalizedString(@"BookDetail", @"Navigation: Title");
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
 }
@@ -113,7 +113,8 @@
 - (void)configureViewForLoadedBook
 {
     // only the fetched book result can be saved
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Save"
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:
+                                              NSLocalizedString(@"Save", @"Navigation: Button Title")
                                                                               style:UIBarButtonItemStylePlain
                                                                              target:self
                                                                              action:@selector(showMenu)];
@@ -122,13 +123,17 @@
     [self.coverImageView setImageWithURL:[NSURL URLWithString:self.bookResult.imageLink]];
     self.titleLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.title];
     self.authorLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.author];
-    self.pagesLabel.text = [NSString stringWithFormat:@"%@ pages", self.bookResult.pages];
     self.publisherLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.publisher];
     self.descriptionTextView.text = [NSString stringWithFormat:@"%@", self.bookResult.bookDescription];
     self.dateLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.year];
     self.languageLabel.text = [NSString stringWithFormat:@"%@", self.bookResult.language];
-    self.previewLabel.text = [NSString stringWithFormat:@"More on %@", self.bookResult.title];
-    self.ratingLabel.text = [NSString stringWithFormat:@"Rating: %@/5 (%@ ratings)",
+    
+    self.pagesLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%@ pages", @"Detail: Pages"),
+                            self.bookResult.pages];
+    self.previewLabel.text = [NSString stringWithFormat:NSLocalizedString(@"More on %@", @"Detail: More"),
+                              self.bookResult.title];
+    self.ratingLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Rating: %@/5 (%@ ratings)",
+                                                                         @"Detail: Ratings"),
                              self.bookResult.rating, self.bookResult.numberOfRatings];
 }
 
@@ -137,13 +142,17 @@
     [self.coverImageView setImageWithURL:[NSURL URLWithString:self.book.imageLink]];
     self.titleLabel.text = [NSString stringWithFormat:@"%@", self.book.title];
     self.authorLabel.text = [NSString stringWithFormat:@"%@", self.book.author];
-    self.pagesLabel.text = [NSString stringWithFormat:@"%@ pages", self.book.pages];
     self.publisherLabel.text = [NSString stringWithFormat:@"%@", self.book.publisher];
     self.descriptionTextView.text = [NSString stringWithFormat:@"%@", self.book.bookDescription];
     self.dateLabel.text = [NSString stringWithFormat:@"%@", self.book.year];
     self.languageLabel.text = [NSString stringWithFormat:@"%@", self.book.language];
-    self.previewLabel.text = [NSString stringWithFormat:@"More on %@", self.book.title];
-    self.ratingLabel.text = [NSString stringWithFormat:@"Rating: %@/5 (%@ ratings)",
+    
+    self.pagesLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%@ pages", @"Detail: Pages"),
+                            self.book.pages];
+    self.previewLabel.text = [NSString stringWithFormat:NSLocalizedString(@"More on %@", @"Detail: More"),
+                              self.book.title];
+    self.ratingLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Rating: %@/5 (%@ ratings)",
+                                                                         @"Detail: Ratings"),
                              self.book.rating, self.book.ratingNumber];
 }
 
@@ -247,7 +256,7 @@
         // book already saved, show alert view
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Duplicate",
                                                                                       @"Duplicate: Title")
-                                                            message:NSLocalizedString(@"You already saved this book.", @"Alert: Duplicate Text")
+                                                            message:NSLocalizedString(@"You already saved this book.", @"Duplicate: Text")
                                                            delegate:nil
                                                   cancelButtonTitle:@"OK"
                                                   otherButtonTitles:nil, nil];
@@ -256,7 +265,7 @@
         // new book, show action sheet for saving
         UIActionSheet *menu = [[UIActionSheet alloc] initWithTitle:nil
                                                           delegate:self
-                                                 cancelButtonTitle:NSLocalizedString(@"You already saved this book.", @"Cancel Button: Title")
+                                                 cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel Button: Title")
                                             destructiveButtonTitle:nil
                                                  otherButtonTitles:NSLocalizedString(@"Save", @"Save Button: Title"), nil];
         [menu showInView:self.view];

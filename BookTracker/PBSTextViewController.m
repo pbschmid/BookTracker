@@ -43,7 +43,7 @@
     titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     titleLabel.textColor = [UIColor colorWithRed:45/255.0f green:29/255.0f blue:19/255.0f alpha:1.0f];
-    titleLabel.text = @"Description";
+    titleLabel.text = NSLocalizedString(@"Description", @"Navigation: Title");
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
     self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;

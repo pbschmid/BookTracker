@@ -9,7 +9,7 @@
 #import "PBSBookStore.h"
 #import "PBSBookResult.h"
 
-static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A";
+static NSString * const GoogleAPIKey = @"YOUR_API_KEY_HERE";
 
 @interface PBSBookStore ()
 
@@ -101,7 +101,6 @@ static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A
     NSArray *results = responseObject[@"items"];
     if (!results) {
         // no results, return
-        NSLog(@"Results empty.");
         return;
     }
     
