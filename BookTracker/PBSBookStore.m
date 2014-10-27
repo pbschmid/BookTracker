@@ -9,7 +9,7 @@
 #import "PBSBookStore.h"
 #import "PBSBookResult.h"
 
-static NSString * const GoogleAPIKey = @"YOUR_API_KEY_HERE";
+static NSString * const GoogleAPIKey = @"AIzaSyBa8IvCnzpRl2wiKSyzJnaXxWUWQNPn38A";
 
 @interface PBSBookStore ()
 

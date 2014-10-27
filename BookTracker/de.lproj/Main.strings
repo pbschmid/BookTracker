@@ -1,0 +1,87 @@
+
+/* Class = "IBUILabel"; text = "Rating"; ObjectID = "443-2t-leN"; */
+"443-2t-leN.text" = "Rating";
+
+/* Class = "IBUILabel"; text = "Title"; ObjectID = "5Bj-p9-ofE"; */
+"5Bj-p9-ofE.text" = "Title";
+
+/* Class = "IBUINavigationItem"; title = "MyBooks"; ObjectID = "8XV-Yq-RQx"; */
+"8XV-Yq-RQx.title" = "Bücher";
+
+/* Class = "IBUINavigationItem"; title = "BookDetail"; ObjectID = "EMc-AN-4fR"; */
+"EMc-AN-4fR.title" = "Details";
+
+/* Class = "IBUILabel"; text = "Buy"; ObjectID = "G4b-Xz-RkZ"; */
+"G4b-Xz-RkZ.text" = "Buy";
+
+/* Class = "IBUILabel"; text = "Title"; ObjectID = "NFk-ak-BxZ"; */
+"NFk-ak-BxZ.text" = "Title";
+
+/* Class = "IBUIBarButtonItem"; title = "Back"; ObjectID = "Rz5-hq-hTV"; */
+"Rz5-hq-hTV.title" = "Zurück";
+
+/* Class = "IBUILabel"; text = "Language"; ObjectID = "SNY-kS-wb4"; */
+"SNY-kS-wb4.text" = "Language";
+
+/* Class = "IBUIBarButtonItem"; title = "Back"; ObjectID = "T3Y-Cz-N8T"; */
+"T3Y-Cz-N8T.title" = "Zurück";
+
+/* Class = "IBUISearchBar"; placeholder = "Search by title, author or ISBN"; ObjectID = "Vxw-uE-Pnl"; */
+"Vxw-uE-Pnl.placeholder" = "Suchen nach Titel, Autor oder ISBN";
+
+/* Class = "IBUISearchBar"; Vxw-uE-Pnl.scopeButtonTitles[0] = "All"; ObjectID = "Vxw-uE-Pnl"; */
+"Vxw-uE-Pnl.scopeButtonTitles[0]" = "Alle";
+
+/* Class = "IBUISearchBar"; Vxw-uE-Pnl.scopeButtonTitles[1] = "Title"; ObjectID = "Vxw-uE-Pnl"; */
+"Vxw-uE-Pnl.scopeButtonTitles[1]" = "Titel";
+
+/* Class = "IBUISearchBar"; Vxw-uE-Pnl.scopeButtonTitles[2] = "Author"; ObjectID = "Vxw-uE-Pnl"; */
+"Vxw-uE-Pnl.scopeButtonTitles[2]" = "Autor";
+
+/* Class = "IBUISearchBar"; Vxw-uE-Pnl.scopeButtonTitles[3] = "ISBN"; ObjectID = "Vxw-uE-Pnl"; */
+"Vxw-uE-Pnl.scopeButtonTitles[3]" = "ISBN";
+
+/* Class = "IBUILabel"; text = "by Author"; ObjectID = "XEk-Vz-wLZ"; */
+"XEk-Vz-wLZ.text" = "by Author";
+
+/* Class = "IBUITabBarItem"; title = "MyBooks"; ObjectID = "XVW-kf-sci"; */
+"XVW-kf-sci.title" = "Bücher";
+
+/* Class = "IBUITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."; ObjectID = "Z8J-Yf-LUP"; */
+"Z8J-Yf-LUP.text" = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.";
+
+/* Class = "IBUITabBarItem"; title = "Search"; ObjectID = "a7o-gg-VUj"; */
+"a7o-gg-VUj.title" = "Suchen";
+
+/* Class = "IBUITableViewSection"; headerTitle = "Details"; ObjectID = "bO8-ee-sN2"; */
+"bO8-ee-sN2.headerTitle" = "Details";
+
+/* Class = "IBUILabel"; text = "1999"; ObjectID = "beT-i6-kHZ"; */
+"beT-i6-kHZ.text" = "1999";
+
+/* Class = "IBUILabel"; text = "Pages"; ObjectID = "cav-au-f5J"; */
+"cav-au-f5J.text" = "Pages";
+
+/* Class = "IBUILabel"; text = "Author"; ObjectID = "cxD-s1-T1U"; */
+"cxD-s1-T1U.text" = "Author";
+
+/* Class = "IBUILabel"; text = "Author"; ObjectID = "eiy-1X-LQB"; */
+"eiy-1X-LQB.text" = "Author";
+
+/* Class = "IBUILabel"; text = "Publisher"; ObjectID = "fBA-uF-VsC"; */
+"fBA-uF-VsC.text" = "Publisher";
+
+/* Class = "IBUITableViewSection"; headerTitle = "Description"; ObjectID = "gCl-L0-WuF"; */
+"gCl-L0-WuF.headerTitle" = "Beschreibung";
+
+/* Class = "IBUIBarButtonItem"; title = "Back"; ObjectID = "gUP-RN-Vz8"; */
+"gUP-RN-Vz8.title" = "Zurück";
+
+/* Class = "IBUITableViewSection"; headerTitle = "Preview"; ObjectID = "qwq-s5-3W0"; */
+"qwq-s5-3W0.headerTitle" = "Vorschau";
+
+/* Class = "IBUINavigationItem"; title = "BookTracker"; ObjectID = "tD2-cu-K9R"; */
+"tD2-cu-K9R.title" = "BuchFinder";
+
+/* Class = "IBUILabel"; text = "Title"; ObjectID = "uGe-gC-o7w"; */
+"uGe-gC-o7w.text" = "Title";

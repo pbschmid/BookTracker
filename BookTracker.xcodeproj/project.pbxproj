@@ -31,6 +31,7 @@
 		377E3C5319F164E000E07534 /* PBSBookResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 377E3C5219F164E000E07534 /* PBSBookResult.m */; };
 		379694FF19EE70650069B446 /* PBSBookStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 379694FE19EE70650069B446 /* PBSBookStore.m */; };
 		3796950219EE72AE0069B446 /* BookModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3796950019EE72AE0069B446 /* BookModel.xcdatamodeld */; };
+		37CB986419FE769200AEEC19 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 37CB986219FE769200AEEC19 /* Localizable.strings */; };
 		ACF4048282966191E612E910 /* libPods-BookTracker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A797F3905580CC5E2A6A591E /* libPods-BookTracker.a */; };
 /* End PBXBuildFile section */
 
@@ -84,6 +85,11 @@
 		379694FD19EE70650069B446 /* PBSBookStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSBookStore.h; sourceTree = "<group>"; };
 		379694FE19EE70650069B446 /* PBSBookStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSBookStore.m; sourceTree = "<group>"; };
 		3796950119EE72AE0069B446 /* BookModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BookModel.xcdatamodel; sourceTree = "<group>"; };
+		37CB986019FE75EF00AEEC19 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
+		37CB986119FE75F000AEEC19 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/PBSNothingFoundCell.strings; sourceTree = "<group>"; };
+		37CB986319FE769200AEEC19 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		37CB986519FE76AF00AEEC19 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		37CB986619FE812700AEEC19 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		409E31230CDAD030F1458E5A /* Pods-BookTracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BookTracker.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BookTracker/Pods-BookTracker.debug.xcconfig"; sourceTree = "<group>"; };
 		A797F3905580CC5E2A6A591E /* libPods-BookTracker.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BookTracker.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -171,6 +177,7 @@
 			isa = PBXGroup;
 			children = (
 				373C68BC19EE61C6005C3AEB /* BookTracker-Info.plist */,
+				37CB986219FE769200AEEC19 /* Localizable.strings */,
 				373C68BD19EE61C6005C3AEB /* InfoPlist.strings */,
 				373C68C019EE61C6005C3AEB /* main.m */,
 				373C68C219EE61C6005C3AEB /* BookTracker-Prefix.pch */,
@@ -350,6 +357,7 @@
 			knownRegions = (
 				en,
 				Base,
+				de,
 			);
 			mainGroup = 373C68A819EE61C5005C3AEB;
 			productRefGroup = 373C68B219EE61C6005C3AEB /* Products */;
@@ -367,6 +375,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				37CB986419FE769200AEEC19 /* Localizable.strings in Resources */,
 				377B5F3219F012FD004F5523 /* PBSNothingFoundCell.xib in Resources */,
 				373C68D019EE61C6005C3AEB /* Images.xcassets in Resources */,
 				373C68BF19EE61C6005C3AEB /* InfoPlist.strings in Resources */,
@@ -460,6 +469,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				373C68BE19EE61C6005C3AEB /* en */,
+				37CB986619FE812700AEEC19 /* de */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -468,6 +478,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				373C68C719EE61C6005C3AEB /* Base */,
+				37CB986019FE75EF00AEEC19 /* de */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -484,8 +495,18 @@
 			isa = PBXVariantGroup;
 			children = (
 				377B5F3119F012FD004F5523 /* Base */,
+				37CB986119FE75F000AEEC19 /* de */,
 			);
 			name = PBSNothingFoundCell.xib;
+			sourceTree = "<group>";
+		};
+		37CB986219FE769200AEEC19 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				37CB986319FE769200AEEC19 /* en */,
+				37CB986519FE76AF00AEEC19 /* de */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
