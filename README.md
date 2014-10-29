@@ -3,7 +3,7 @@ BookTracker
 
 An iOS search app where users can find, save and read books.
 
-Here's a ![screenshot](https://github.com/pbschmid/BookTracker/tree/master/Demo/Screenshot.png "BookTracker screenshot") of the app.
+Here's a [screenshot](https://github.com/pbschmid/BookTracker/tree/master/Demo/Screenshot.png "BookTracker screenshot") of the app.
 
 Credits
 -------
